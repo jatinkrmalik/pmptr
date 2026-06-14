@@ -52,7 +52,7 @@ jobs:
           path: |
             dist/*.AppImage
             dist/*.deb
-          retention-days: 7
+          retention-days: 30
 
       - name: Upload macOS artifacts
         if: matrix.platform == 'mac'
@@ -61,7 +61,7 @@ jobs:
           name: pmptr-mac
           path: |
             dist/*.dmg
-          retention-days: 7
+          retention-days: 30
 
       - name: Upload Windows artifacts
         if: matrix.platform == 'windows'
@@ -70,4 +70,4 @@ jobs:
           name: pmptr-windows
           path: |
             dist/*.exe
-          retention-days: 7
+          retention-days: 30
