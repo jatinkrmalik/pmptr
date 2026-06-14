@@ -1,4 +1,4 @@
-# pmptr
+# <img src="assets/icon.svg" height="40" align="center" /> pmptr
 
 [![Build](https://github.com/jatinkrmalik/pmptr/actions/workflows/build.yml/badge.svg)](https://github.com/jatinkrmalik/pmptr/actions/workflows/build.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -10,9 +10,9 @@ click-through overlay over whatever you do on your screen.
 
 ## What you get
 
-- **Control window** — paste script, tune speed, size, colors, opacity, mirror,
+- **Control window** - paste script, tune speed, size, colors, opacity, mirror,
   window dimensions, etc.
-- **Floating prompter window** — transparent, frameless, always on top, with
+- **Floating prompter window** - transparent, frameless, always on top, with
   a true OS-level click-through "lock" so you can keep working with your mouse
   on whatever is underneath.
 - Settings persist to disk in your Electron user-data folder.
@@ -40,11 +40,45 @@ Then click **Open floating prompter** in the control window.
 You can also use the small HUD in the bottom-right of the floating window
 (mouse over it to reveal it).
 
+## Architecture
+
+```mermaid
+graph TB
+    subgraph "Electron Main Process"
+        M[main.js]
+        SETTINGS[(settings.json)]
+    end
+
+    subgraph "Control Window"
+        CH[control.html]
+        CJ[control.js]
+    end
+
+    subgraph "Prompter Window"
+        PH[prompter.html]
+        PJ[prompter.js]
+    end
+
+    M -->|spawns| CH
+    M -->|spawns| PH
+    M <-->|save/load| SETTINGS
+    CJ -->|IPC: settings changed| M
+    M -->|IPC: settings| PH
+    PH -->|IPC: state| M
+    M -->|IPC: state| CJ
+```
+
+The app runs in two Electron `BrowserWindow` instances that communicate
+through IPC handlers in the main process. The control window is where you
+paste your script and adjust settings; the prompter window is the
+transparent, always-on-top overlay that scrolls the text. Settings are
+persisted to `settings.json` in the Electron user-data directory.
+
 ## How the click-through works
 
 The prompter is a separate `BrowserWindow` with `transparent: true`, `frame: false`,
 and `alwaysOnTop: true`. When you toggle "click-through" (the lock), the main
-process calls `win.setIgnoreMouseEvents(true, { forward: true })` — clicks
+process calls `win.setIgnoreMouseEvents(true, { forward: true })` - clicks
 and wheel events fall straight through to whatever app is behind, while the
 window stays visible and keeps scrolling. The HUD itself is hidden while
 locked, so nothing on the prompter intercepts your pointer.
@@ -106,7 +140,7 @@ npm run build
   `setAlwaysOnTop` (the underlying APIs Electron uses). X11 (Xorg) and recent
   KDE / GNOME Wayland work fine; some lighter Wayland compositors may ignore
   these hints. If click-through or always-on-top does not work, the prompter
-  is still useful — just drag it to a corner.
+  is still useful - just drag it to a corner.
 - On macOS you may need to grant Accessibility / Screen Recording permissions
   to the app for click-through to behave predictably across all apps.
 - The app is not code-signed. Your OS may warn on first launch.
