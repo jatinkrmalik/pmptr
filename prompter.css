@@ -1,0 +1,233 @@
+:root {
+  color-scheme: dark light;
+  --text: #ffffff;
+  --hl: #ffd84d;
+  --bg-rgb: 0, 0, 0;
+  --bg-alpha: 0.35;
+  --dim: 0;
+  --font: 44px;
+  --lh: 1.45;
+  --ls: 0px;
+  --margin: 0px;
+  --stroke: 0px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.frame {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(var(--bg-rgb), var(--bg-alpha));
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 14px 40px rgba(0, 0, 0, 0.35);
+  transition: background 120ms ease;
+}
+
+.frame.dim {
+  background: rgba(0, 0, 0, calc(var(--bg-alpha) + var(--dim) / 100));
+}
+
+.read-area {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+.pad {
+  height: 50vh;
+}
+
+.text {
+  margin: 0;
+  padding: 0 calc(24px + var(--margin));
+  color: var(--text);
+  font-size: var(--font);
+  line-height: var(--lh);
+  letter-spacing: var(--ls);
+  text-transform: var(--tt, none);
+  font-weight: var(--weight, 500);
+  white-space: pre-wrap;
+  word-break: break-word;
+  text-align: center;
+  transform: var(--mirror, none);
+  text-shadow: 0 0 var(--stroke) rgba(0, 0, 0, 0.85);
+  -webkit-text-stroke: var(--stroke) rgba(0, 0, 0, 0.6);
+}
+
+.text b,
+.text strong {
+  color: var(--hl);
+  font-weight: 700;
+}
+
+.reading-line {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 50%;
+  height: 0;
+  border-top: 2px solid rgba(255, 216, 77, 0.55);
+  pointer-events: none;
+  display: var(--show-line, block);
+}
+.reading-line::before,
+.reading-line::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 216, 77, 0.85);
+}
+.reading-line::before {
+  left: -3px;
+}
+.reading-line::after {
+  right: -3px;
+}
+
+.fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 22%;
+  pointer-events: none;
+  z-index: 2;
+}
+.fade.top {
+  top: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.55),
+    rgba(0, 0, 0, 0)
+  );
+}
+.fade.bottom {
+  bottom: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.55),
+    rgba(0, 0, 0, 0)
+  );
+}
+
+.hud {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  display: flex;
+  gap: 4px;
+  background: rgba(15, 17, 21, 0.6);
+  padding: 4px;
+  border-radius: 8px;
+  backdrop-filter: blur(6px);
+  -webkit-app-region: no-drag;
+  z-index: 5;
+  opacity: 0.18;
+  transition: opacity 160ms ease;
+}
+.hud:hover,
+.hud:focus-within {
+  opacity: 1;
+}
+.hud[data-locked="true"] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hud-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  font: 14px/1 system-ui;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.hud-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+.hud-btn[aria-pressed="true"] {
+  background: rgba(255, 216, 77, 0.2);
+  color: var(--hl);
+}
+
+.grab {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 60px;
+  height: 22px;
+  -webkit-app-region: drag;
+  cursor: grab;
+  z-index: 3;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.04),
+    rgba(255, 255, 255, 0)
+  );
+}
+.grab:active {
+  cursor: grabbing;
+}
+
+.resize {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 18px;
+  height: 18px;
+  cursor: nwse-resize;
+  z-index: 4;
+  background: linear-gradient(
+    135deg,
+    transparent 50%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0.25) 60%,
+    transparent 60%,
+    transparent 70%,
+    rgba(255, 255, 255, 0.15) 70%,
+    rgba(255, 255, 255, 0.15) 80%,
+    transparent 80%
+  );
+}
+
+/* When the whole window is in click-through mode (locked), the HUD is
+   hidden via the [data-locked] rule above, but the resize handle and
+   grab bar should also be non-blocking so users can still see through. */
+.frame[data-locked="true"] .grab,
+.frame[data-locked="true"] .resize {
+  pointer-events: none;
+}

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="color-scheme" content="dark light" />
+    <title>pmptr prompter</title>
+    <link rel="stylesheet" href="prompter.css" />
+  </head>
+  <body>
+    <div class="frame" id="frame">
+      <div class="read-area" id="readArea">
+        <div class="track" id="track">
+          <div class="pad" id="padTop"></div>
+          <pre class="text" id="text"></pre>
+          <div class="pad" id="padBottom"></div>
+        </div>
+        <div class="reading-line" id="readingLine" aria-hidden="true"></div>
+        <div class="fade top" aria-hidden="true"></div>
+        <div class="fade bottom" aria-hidden="true"></div>
+      </div>
+
+      <div class="hud" id="hud" data-locked="false">
+        <button id="btnPlay" class="hud-btn" title="Play / Pause (Space)">
+          <span class="icon" id="iconPlay">❚❚</span>
+        </button>
+        <button id="btnReset" class="hud-btn" title="Reset (R)">↺</button>
+        <button
+          id="btnLock"
+          class="hud-btn"
+          title="Lock — click-through (L)"
+          aria-pressed="false"
+        >
+          <span id="iconLock">🔓</span>
+        </button>
+        <button id="btnClose" class="hud-btn" title="Close (Esc)">✕</button>
+      </div>
+
+      <div class="grab" title="Drag to move" aria-hidden="true"></div>
+      <div class="resize" aria-hidden="true"></div>
+    </div>
+
+    <script src="prompter.js"></script>
+  </body>
+</html>

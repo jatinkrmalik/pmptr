@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="color-scheme" content="dark" />
+    <title>pmptr — control</title>
+    <link rel="stylesheet" href="control.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">pmptr</div>
+      <div class="sub">virtual teleprompter</div>
+    </header>
+
+    <main class="layout">
+      <section class="card">
+        <div class="card-head">
+          <h2>Script</h2>
+          <div class="row tight">
+            <button id="loadSample" type="button" class="ghost">
+              Load sample
+            </button>
+            <button id="clearScript" type="button" class="ghost">
+              Clear
+            </button>
+          </div>
+        </div>
+        <textarea
+          id="script"
+          spellcheck="false"
+          placeholder="Paste your script here. Blank lines become paragraph breaks."
+        ></textarea>
+        <div class="hint" id="scriptMeta">0 words · 0 chars</div>
+      </section>
+
+      <section class="card">
+        <h2>Reading</h2>
+        <div class="grid">
+          <label class="field">
+            <span class="lbl"
+              >Speed <output id="speedOut">40</output>
+              <span class="unit">px/s</span></span
+            >
+            <input id="speed" type="range" min="5" max="300" step="1" value="40" />
+          </label>
+          <label class="field">
+            <span class="lbl"
+              >Text size <output id="fontOut">44</output>
+              <span class="unit">px</span></span
+            >
+            <input id="font" type="range" min="16" max="120" step="1" value="44" />
+          </label>
+          <label class="field">
+            <span class="lbl"
+              >Line height
+              <output id="lhOut">1.45</output></span
+            >
+            <input
+              id="lh"
+              type="range"
+              min="1"
+              max="2.4"
+              step="0.05"
+              value="1.45"
+            />
+          </label>
+          <label class="field">
+            <span class="lbl"
+              >Letter spacing
+              <output id="lsOut">0</output>
+              <span class="unit">px</span></span
+            >
+            <input
+              id="ls"
+              type="range"
+              min="-2"
+              max="10"
+              step="0.5"
+              value="0"
+            />
+          </label>
+          <label class="field">
+            <span class="lbl"
+              >Margin <output id="marginOut">0</output>
+              <span class="unit">px</span></span
+            >
+            <input
+              id="margin"
+              type="range"
+              min="0"
+              max="200"
+              step="2"
+              value="0"
+            />
+          </label>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Appearance</h2>
+        <div class="grid">
+          <label class="field">
+            <span class="lbl">Text color</span>
+            <input id="color" type="color" value="#ffffff" />
+          </label>
+          <label class="field">
+            <span class="lbl">Highlight color</span>
+            <input id="hl" type="color" value="#ffd84d" />
+          </label>
+          <label class="field">
+            <span class="lbl"
+              >Background opacity
+              <output id="bgOut">35</output>
+              <span class="unit">%</span></span
+            >
+            <input
+              id="bg"
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+              value="35"
+            />
+          </label>
+          <label class="field">
+            <span class="lbl"
+              >Background dim
+              <output id="dimOut">0</output>
+              <span class="unit">%</span></span
+            >
+            <input
+              id="dim"
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+              value="0"
+            />
+          </label>
+          <label class="field wide">
+            <span class="lbl"
+              >Text outline
+              <output id="strokeOut">0</output>
+              <span class="unit">px</span></span
+            >
+            <input
+              id="stroke"
+              type="range"
+              min="0"
+              max="6"
+              step="0.5"
+              value="0"
+            />
+          </label>
+        </div>
+        <div class="row tight">
+          <label class="check">
+            <input id="mirror" type="checkbox" />
+            <span>Mirror (for beam-splitter glass)</span>
+          </label>
+          <label class="check">
+            <input id="bold" type="checkbox" />
+            <span>Bold</span>
+          </label>
+          <label class="check">
+            <input id="uppercase" type="checkbox" />
+            <span>UPPERCASE</span>
+          </label>
+          <label class="check">
+            <input id="showReadingLine" type="checkbox" checked />
+            <span>Reading line</span>
+          </label>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Window</h2>
+        <div class="grid">
+          <label class="field">
+            <span class="lbl"
+              >Width <output id="winWidthOut">900</output>
+              <span class="unit">px</span></span
+            >
+            <input
+              id="winWidth"
+              type="range"
+              min="240"
+              max="2400"
+              step="10"
+              value="900"
+            />
+          </label>
+          <label class="field">
+            <span class="lbl"
+              >Height <output id="winHeightOut">280</output>
+              <span class="unit">px</span></span
+            >
+            <input
+              id="winHeight"
+              type="range"
+              min="80"
+              max="900"
+              step="10"
+              value="280"
+            />
+          </label>
+          <label class="field">
+            <span class="lbl">Position preset</span>
+            <select id="position">
+              <option value="top-center" selected>Top center</option>
+              <option value="top-left">Top left</option>
+              <option value="top-right">Top right</option>
+              <option value="bottom-center">Bottom center</option>
+            </select>
+          </label>
+        </div>
+        <div class="row tight">
+          <label class="check">
+            <input id="alwaysOnTop" type="checkbox" checked />
+            <span>Always on top</span>
+          </label>
+          <label class="check">
+            <input id="clickThrough" type="checkbox" />
+            <span>Click-through (lock)</span>
+          </label>
+        </div>
+      </section>
+
+      <section class="card actions">
+        <button id="openBtn" class="primary" type="button">
+          Open floating prompter
+        </button>
+        <button id="closeBtn" type="button" disabled>Close prompter</button>
+        <span class="state" id="state">prompter closed</span>
+      </section>
+
+      <details class="card hint-card">
+        <summary>Shortcuts &amp; tips</summary>
+        <ul>
+          <li>
+            <b>Space</b> — play / pause. <b>R</b> — reset to top.
+            <b>↑ / ↓</b> — speed ± 5. <b>L</b> — toggle click-through.
+            <b>Esc</b> — close prompter.
+          </li>
+          <li>
+            When the prompter is <b>locked</b> (click-through on), the HUD
+            still works because we forward mouse events to interactive
+            children. The reading area itself is fully click-through.
+          </li>
+          <li>
+            Drag the bottom-right corner of the floating window to resize
+            live. Position preset recenters it.
+          </li>
+        </ul>
+      </details>
+    </main>
+
+    <script src="control.js"></script>
+  </body>
+</html>
