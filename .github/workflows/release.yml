@@ -1,0 +1,128 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux
+          - os: macos-latest
+            platform: mac
+          - os: windows-latest
+            platform: windows
+
+    runs-on: ${{ matrix.os }}
+
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint code
+        run: npm run lint
+
+      - name: Build application
+        run: npm run build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Linux artifacts
+        if: matrix.platform == 'linux'
+        uses: actions/upload-artifact@v4
+        with:
+          name: pmptr-linux
+          path: |
+            dist/*.AppImage
+            dist/*.deb
+
+      - name: Upload macOS artifacts
+        if: matrix.platform == 'mac'
+        uses: actions/upload-artifact@v4
+        with:
+          name: pmptr-mac
+          path: |
+            dist/*.dmg
+
+      - name: Upload Windows artifacts
+        if: matrix.platform == 'windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: pmptr-windows
+          path: |
+            dist/*.exe
+
+  release:
+    name: Create GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Get version and previous tag
+        id: version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          # Get previous tag for changelog
+          PREVIOUS_TAG=$(git tag --sort=-version:refname | sed -n '2p' || echo "")
+          echo "PREVIOUS_TAG=$PREVIOUS_TAG" >> $GITHUB_OUTPUT
+
+      - name: Generate release notes
+        id: release_notes
+        run: |
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          PREVIOUS_TAG="${{ steps.version.outputs.PREVIOUS_TAG }}"
+
+          # Generate changelog from commits
+          if [ -n "$PREVIOUS_TAG" ]; then
+            CHANGELOG=$(git log --pretty=format:"- %s (%h)" $PREVIOUS_TAG..$VERSION | head -50)
+          else
+            CHANGELOG=$(git log --pretty=format:"- %s (%h)" | head -50)
+          fi
+
+          # Read template and substitute variables
+          TEMPLATE=$(cat .github/RELEASE_TEMPLATE.md)
+          TEMPLATE="${TEMPLATE//\{\{ version \}\}/$VERSION}"
+          TEMPLATE="${TEMPLATE//\{\{ previous_version \}\}/$PREVIOUS_TAG}"
+          TEMPLATE="${TEMPLATE//\{\{ changelog \}\}/$CHANGELOG}"
+
+          echo "RELEASE_NOTES<<EOF" >> $GITHUB_OUTPUT
+          echo "$TEMPLATE" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ steps.version.outputs.VERSION }}
+          body: ${{ steps.release_notes.outputs.RELEASE_NOTES }}
+          files: artifacts/**/*
+          draft: false
+          prerelease: ${{ contains(github.ref, '-') }}
