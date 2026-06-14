@@ -1,9 +1,13 @@
 # <img src="assets/icon.svg" height="40" align="center" /> pmptr
 
+[![Release](https://img.shields.io/github/v/release/jatinkrmalik/pmptr?include_prereleases)](https://github.com/jatinkrmalik/pmptr/releases)
 [![Build](https://github.com/jatinkrmalik/pmptr/actions/workflows/build.yml/badge.svg)](https://github.com/jatinkrmalik/pmptr/actions/workflows/build.yml)
+[![Release Pipeline](https://github.com/jatinkrmalik/pmptr/actions/workflows/release.yml/badge.svg)](https://github.com/jatinkrmalik/pmptr/actions/workflows/release.yml)
+[![Nightly](https://github.com/jatinkrmalik/pmptr/actions/workflows/nightly.yml/badge.svg)](https://github.com/jatinkrmalik/pmptr/actions/workflows/nightly.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/github/package-json/v/jatinkrmalik/pmptr)](https://github.com/jatinkrmalik/pmptr/releases)
 [![Platform](https://img.shields.io/badge/platform-linux%20%7C%20macos%20%7C%20windows-blue)](https://github.com/jatinkrmalik/pmptr)
+[![Node](https://img.shields.io/badge/node-%3E%3D20-339933)](https://nodejs.org)
+[![Electron](https://img.shields.io/badge/electron-31-47848F)](https://www.electronjs.org)
 
 A minimal virtual teleprompter that lives as a transparent, always-on-top,
 click-through overlay over whatever you do on your screen.

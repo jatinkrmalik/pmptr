@@ -1,0 +1,145 @@
+name: Nightly Build
+
+on:
+  schedule:
+    # Run daily at 00:00 UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+    # Allow manual triggering
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux
+          - os: macos-latest
+            platform: mac
+          - os: windows-latest
+            platform: windows
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint code
+        run: npm run lint
+
+      - name: Build application
+        run: npm run build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Linux artifacts
+        if: matrix.platform == 'linux'
+        uses: actions/upload-artifact@v4
+        with:
+          name: pmptr-nightly-linux
+          path: |
+            dist/*.AppImage
+            dist/*.deb
+
+      - name: Upload macOS artifacts
+        if: matrix.platform == 'mac'
+        uses: actions/upload-artifact@v4
+        with:
+          name: pmptr-nightly-mac
+          path: |
+            dist/*.dmg
+
+      - name: Upload Windows artifacts
+        if: matrix.platform == 'windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: pmptr-nightly-windows
+          path: |
+            dist/*.exe
+
+  cleanup:
+    name: Cleanup Old Nightly Builds
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Delete old nightly workflow runs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          KEEP_COUNT: 3
+        run: |
+          echo "Fetching recent nightly workflow runs..."
+
+          # Get all workflow runs for the nightly workflow
+          RUNS=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${REPO}/actions/runs?per_page=100" \
+            --jq '.workflow_runs[] | select(.name == "Nightly Build") | {id: .id, created_at: .created_at}' \
+            2>&1)
+
+          if [ -z "$RUNS" ]; then
+            echo "No nightly runs found or unable to fetch."
+            exit 0
+          fi
+
+          echo "$RUNS" | head -10
+          echo "---"
+
+          # Get the IDs of runs to keep (most recent KEEP_COUNT)
+          KEEP_IDS=$(echo "$RUNS" | jq -r '.id' | head -n "$KEEP_COUNT")
+          echo "Keeping runs: $KEEP_IDS"
+
+          # Get the IDs of runs to delete
+          DELETE_IDS=$(echo "$RUNS" | jq -r '.id' | tail -n +$((KEEP_COUNT + 1)))
+          echo "Deleting runs: $DELETE_IDS"
+
+          if [ -z "$DELETE_IDS" ]; then
+            echo "No old runs to delete."
+            exit 0
+          fi
+
+          # Delete old runs and their artifacts
+          for RUN_ID in $DELETE_IDS; do
+            echo "Deleting run $RUN_ID and its artifacts..."
+
+            # Get artifacts for this run
+            ARTIFACT_IDS=$(gh api \
+              -H "Accept: application/vnd.github+json" \
+              "/repos/${REPO}/actions/runs/${RUN_ID}/artifacts" \
+              --jq '.artifacts[].id' 2>/dev/null)
+
+            # Delete each artifact
+            for ARTIFACT_ID in $ARTIFACT_IDS; do
+              echo "  Deleting artifact $ARTIFACT_ID"
+              gh api \
+                -X DELETE \
+                -H "Accept: application/vnd.github+json" \
+                "/repos/${REPO}/actions/artifacts/${ARTIFACT_ID}" \
+                > /dev/null 2>&1 || echo "    Failed to delete artifact"
+            done
+
+            # Delete the workflow run
+            echo "  Deleting run $RUN_ID"
+            gh api \
+              -X DELETE \
+              -H "Accept: application/vnd.github+json" \
+              "/repos/${REPO}/actions/runs/${RUN_ID}" \
+              > /dev/null 2>&1 || echo "    Failed to delete run"
+          done
+
+          echo "Cleanup complete."
