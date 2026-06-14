@@ -1,8 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Dark background -->
+  <rect width="512" height="512" rx="64" fill="#0f1115"/>
   <!-- Screen -->
-  <rect x="64" y="128" width="384" height="256" rx="24" stroke="#ffffff" stroke-width="16"/>
+  <rect x="96" y="144" width="320" height="224" rx="16" stroke="#ffffff" stroke-width="12"/>
   <!-- Text lines -->
-  <path d="M128 200h256M128 256h256M128 312h256" stroke="#ffffff" stroke-width="12" stroke-linecap="round"/>
+  <path d="M144 208h224M144 256h224M144 304h224" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
   <!-- Play arrow -->
-  <path d="M384 360l-48 28v-56z" fill="#ffd84d"/>
+  <path d="M336 344l-40 24v-48z" fill="#ffd84d"/>
 </svg>

@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "description": "A minimal virtual teleprompter that lives as a transparent, always-on-top, click-through overlay.",
   "main": "src/main/main.js",
+  "author": {
+    "name": "Jatin Malik",
+    "email": "jatinkrmalik@gmail.com"
+  },
   "scripts": {
     "start": "electron .",
     "lint": "eslint src/",
