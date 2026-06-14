@@ -7,6 +7,9 @@ on:
   workflow_dispatch:
     # Allow manual triggering
 
+permissions:
+  contents: write
+
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
 
@@ -27,6 +30,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -70,9 +75,67 @@ jobs:
           path: |
             dist/*.exe
 
+  nightly-release:
+    name: Create Nightly Release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Get build information
+        id: info
+        run: |
+          DATE=$(date -u +'%Y-%m-%d')
+          COMMIT_SHA="${{ github.sha }}"
+          COMMIT_SHA_SHORT="${COMMIT_SHA:0:7}"
+          BRANCH="${{ github.ref_name }}"
+          BUILD_NUMBER="${{ github.run_number }}"
+
+          echo "DATE=$DATE" >> $GITHUB_OUTPUT
+          echo "COMMIT_SHA=$COMMIT_SHA" >> $GITHUB_OUTPUT
+          echo "COMMIT_SHA_SHORT=$COMMIT_SHA_SHORT" >> $GITHUB_OUTPUT
+          echo "BRANCH=$BRANCH" >> $GITHUB_OUTPUT
+          echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_OUTPUT
+
+      - name: Generate nightly release notes
+        id: release_notes
+        run: |
+          DATE="${{ steps.info.outputs.DATE }}"
+          COMMIT_SHA="${{ steps.info.outputs.COMMIT_SHA }}"
+          COMMIT_SHA_SHORT="${{ steps.info.outputs.COMMIT_SHA_SHORT }}"
+          BRANCH="${{ steps.info.outputs.BRANCH }}"
+          BUILD_NUMBER="${{ steps.info.outputs.BUILD_NUMBER }}"
+
+          # Read template and substitute variables
+          TEMPLATE=$(cat .github/NIGHTLY_TEMPLATE.md)
+          TEMPLATE="${TEMPLATE//\{\{ date \}\}/$DATE}"
+          TEMPLATE="${TEMPLATE//\{\{ commit_sha \}\}/$COMMIT_SHA}"
+          TEMPLATE="${TEMPLATE//\{\{ branch \}\}/$BRANCH}"
+          TEMPLATE="${TEMPLATE//\{\{ build_number \}\}/$BUILD_NUMBER}"
+
+          echo "RELEASE_NOTES<<EOF" >> $GITHUB_OUTPUT
+          echo "$TEMPLATE" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create Nightly Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: nightly-${{ steps.info.outputs.DATE }}
+          name: Nightly Build - ${{ steps.info.outputs.DATE }}
+          body: ${{ steps.release_notes.outputs.RELEASE_NOTES }}
+          files: artifacts/**/*
+          draft: false
+          prerelease: true
+
   cleanup:
     name: Cleanup Old Nightly Builds
-    needs: build
+    needs: nightly-release
     runs-on: ubuntu-latest
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
 
