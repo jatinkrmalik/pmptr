@@ -40,7 +40,7 @@ function createControlWindow() {
     },
   });
   controlWin.removeMenu();
-  controlWin.loadFile(path.join(__dirname, "control.html"));
+  controlWin.loadFile(path.join(__dirname, "../control/control.html"));
   controlWin.on("closed", () => {
     controlWin = null;
     if (prompterWin && !prompterWin.isDestroyed()) prompterWin.close();
@@ -81,7 +81,7 @@ function createPrompterWindow(initial) {
     backgroundColor: "#00000000",
     show: false,
     webPreferences: {
-      preload: path.join(__dirname, "prompter-preload.js"),
+      preload: path.join(__dirname, "../prompter/prompter-preload.js"),
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: true,
@@ -90,7 +90,7 @@ function createPrompterWindow(initial) {
 
   prompterWin.setAlwaysOnTop(true, "screen-saver");
   prompterWin.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
-  prompterWin.loadFile(path.join(__dirname, "prompter.html"));
+  prompterWin.loadFile(path.join(__dirname, "../prompter/prompter.html"));
   prompterWin.once("ready-to-show", () => {
     prompterWin.showInactive();
   });

@@ -1,5 +1,10 @@
 # pmptr
 
+[![Build](https://github.com/jatinkrmalik/pmptr/actions/workflows/build.yml/badge.svg)](https://github.com/jatinkrmalik/pmptr/actions/workflows/build.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Version](https://img.shields.io/github/package-json/v/jatinkrmalik/pmptr)](https://github.com/jatinkrmalik/pmptr/releases)
+[![Platform](https://img.shields.io/badge/platform-linux%20%7C%20macos%20%7C%20windows-blue)](https://github.com/jatinkrmalik/pmptr)
+
 A minimal virtual teleprompter that lives as a transparent, always-on-top,
 click-through overlay over whatever you do on your screen.
 
@@ -54,12 +59,45 @@ itself stays opaque.
 ## Project layout
 
 ```
-main.js               Electron main: creates both windows, handles IPC,
-                      click-through, always-on-top, position presets.
-preload.js            contextBridge for the control window.
-prompter-preload.js   contextBridge for the prompter window.
-control.html / .js    The control panel.
-prompter.html / .js   The floating teleprompter overlay.
+src/
+├── main/
+│   ├── main.js               Electron main: creates both windows, handles IPC,
+│   │                         click-through, always-on-top, position presets.
+│   └── preload.js            contextBridge for the control window.
+├── control/
+│   ├── control.html          The control panel UI.
+│   ├── control.js            Control panel logic.
+│   └── control.css           Control panel styles.
+└── prompter/
+    ├── prompter.html         The floating teleprompter overlay.
+    ├── prompter.js           Prompter logic (scroll, shortcuts, HUD).
+    ├── prompter.css          Prompter styles.
+    └── prompter-preload.js   contextBridge for the prompter window.
+
+assets/
+└── icon.svg                  Application icon.
+
+.github/workflows/
+└── build.yml                 CI/CD pipeline for Linux, macOS, Windows.
+```
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Run the app
+npm start
+
+# Lint code
+npm run lint
+
+# Run tests (currently just lint)
+npm test
+
+# Build for distribution
+npm run build
 ```
 
 ## Known limitations

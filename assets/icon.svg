@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Screen -->
+  <rect x="64" y="128" width="384" height="256" rx="24" stroke="#ffffff" stroke-width="16"/>
+  <!-- Text lines -->
+  <path d="M128 200h256M128 256h256M128 312h256" stroke="#ffffff" stroke-width="12" stroke-linecap="round"/>
+  <!-- Play arrow -->
+  <path d="M384 360l-48 28v-56z" fill="#ffd84d"/>
+</svg>
