@@ -58,6 +58,7 @@ jobs:
           path: |
             dist/*.AppImage
             dist/*.deb
+          retention-days: 1
 
       - name: Upload macOS artifacts
         if: matrix.platform == 'mac'
@@ -66,6 +67,7 @@ jobs:
           name: pmptr-nightly-mac
           path: |
             dist/*.dmg
+          retention-days: 1
 
       - name: Upload Windows artifacts
         if: matrix.platform == 'windows'
@@ -74,6 +76,7 @@ jobs:
           name: pmptr-nightly-windows
           path: |
             dist/*.exe
+          retention-days: 1
 
   nightly-release:
     name: Create Nightly Release
