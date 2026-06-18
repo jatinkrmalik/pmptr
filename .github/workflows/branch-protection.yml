@@ -19,10 +19,19 @@ jobs:
     name: Check for Direct Pushes to Main
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
+    outputs:
+      is_pr_merge: ${{ steps.check.outputs.is_pr_merge }}
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Check if push is from a PR merge
         id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
         run: |
           # Get the commit message
           COMMIT_MSG=$(git log -1 --pretty=%B)
@@ -31,10 +40,17 @@ jobs:
           echo "$COMMIT_MSG"
           echo "---"
 
-          # Check if this looks like a merge commit
-          # Merge commits typically have "Merge pull request" in the message
-          if echo "$COMMIT_MSG" | grep -qiE "^merge pull request #[0-9]+"; then
-            echo "✓ This is a legitimate PR merge"
+          # Prefer the GitHub association because squash/rebase merges do not
+          # necessarily leave a "Merge pull request" commit message.
+          ASSOCIATED_PRS=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${REPO}/commits/${SHA}/pulls" \
+            --jq 'length' 2>/dev/null || echo "0")
+
+          echo "Associated PR count: $ASSOCIATED_PRS"
+
+          if [ "$ASSOCIATED_PRS" -gt 0 ]; then
+            echo "✓ This commit is associated with a pull request"
             echo "is_pr_merge=true" >> $GITHUB_OUTPUT
           elif echo "$COMMIT_MSG" | grep -qiE "^merge branch"; then
             echo "✓ This is a branch merge"
@@ -56,9 +72,11 @@ jobs:
   notify-bypass:
     name: Notify on Bypass
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && steps.check.outputs.is_pr_merge == 'false'
+    if: always() && needs.check-direct-push.outputs.is_pr_merge == 'false'
     needs: check-direct-push
     continue-on-error: true
+    permissions:
+      issues: write
 
     steps:
       - name: Create issue for direct push
