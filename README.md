@@ -27,6 +27,17 @@ Grab the latest build from the [Releases page](https://github.com/jatinkrmalik/p
 
 Not code-signed — your OS may warn on first launch. That's expected during beta.
 
+## Install from npm
+
+If you have [Node.js](https://nodejs.org) installed, you can install `pmptr` globally and run it from your terminal:
+
+```bash
+npm install -g pmptr
+pmptr
+```
+
+Requires Node.js **20** or later.
+
 ## Run from source
 
 ```bash

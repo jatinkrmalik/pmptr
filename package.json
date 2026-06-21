@@ -1,8 +1,16 @@
 {
   "name": "pmptr",
-  "version": "0.1.0-beta.1",
+  "version": "0.1.0",
   "description": "A minimal virtual teleprompter that lives as a transparent, always-on-top, click-through overlay.",
   "main": "src/main/main.js",
+  "bin": {
+    "pmptr": "bin/pmptr.js"
+  },
+  "files": [
+    "bin/**/*",
+    "src/**/*",
+    "assets/**/*"
+  ],
   "author": {
     "name": "Jatin Malik",
     "email": "jatinkrmalik@gmail.com"
@@ -28,6 +36,7 @@
       "output": "dist"
     },
     "files": [
+      "bin/**/*",
       "src/**/*",
       "assets/**/*",
       "package.json"
@@ -49,10 +58,15 @@
       "category": "Utility"
     }
   },
+  "dependencies": {
+    "electron": "^31.0.0"
+  },
   "devDependencies": {
-    "electron": "^31.0.0",
     "electron-builder": "^24.13.3",
     "eslint": "^8.57.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   },
   "license": "MIT"
 }
