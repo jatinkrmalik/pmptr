@@ -9,27 +9,44 @@
 [![Node](https://img.shields.io/badge/node-%3E%3D20-339933)](https://nodejs.org)
 [![Electron](https://img.shields.io/badge/electron-31-47848F)](https://www.electronjs.org)
 
+> **Beta** — pmptr is in active beta. Expect occasional bugs and breaking changes.
+> Please [report issues](https://github.com/jatinkrmalik/pmptr/issues) you encounter.
+
 A minimal virtual teleprompter that lives as a transparent, always-on-top,
 click-through overlay over whatever you do on your screen.
 
-## What you get
+## Download
 
-- **Control window** - paste script, tune speed, size, colors, opacity, mirror,
-  window dimensions, etc.
-- **Floating prompter window** - transparent, frameless, always on top, with
-  a true OS-level click-through "lock" so you can keep working with your mouse
-  on whatever is underneath.
-- Settings persist to disk in your Electron user-data folder.
-- Live updates: edits in the control window apply to the prompter instantly.
+Grab the latest build from the [Releases page](https://github.com/jatinkrmalik/pmptr/releases).
 
-## Run it
+| Platform | Format |
+|----------|--------|
+| macOS    | `.dmg` |
+| Windows  | `.exe` (NSIS installer) |
+| Linux    | `.AppImage` or `.deb` |
+
+Not code-signed — your OS may warn on first launch. That's expected during beta.
+
+## Run from source
 
 ```bash
+git clone https://github.com/jatinkrmalik/pmptr.git
+cd pmptr
 npm install
 npm start
 ```
 
 Then click **Open floating prompter** in the control window.
+
+## Features
+
+- **Control window** — paste your script, tune speed, size, colors, opacity, mirror,
+  window dimensions, and more.
+- **Floating prompter window** — transparent, frameless, always on top, with
+  a true OS-level click-through "lock" so you can keep working with your mouse
+  on whatever is underneath.
+- Settings persist to disk in your Electron user-data folder.
+- Live updates: edits in the control window apply to the prompter instantly.
 
 ## Shortcuts (in the floating window)
 
@@ -82,7 +99,7 @@ persisted to `settings.json` in the Electron user-data directory.
 
 The prompter is a separate `BrowserWindow` with `transparent: true`, `frame: false`,
 and `alwaysOnTop: true`. When you toggle "click-through" (the lock), the main
-process calls `win.setIgnoreMouseEvents(true, { forward: true })` - clicks
+process calls `win.setIgnoreMouseEvents(true, { forward: true })` — clicks
 and wheel events fall straight through to whatever app is behind, while the
 window stays visible and keeps scrolling. The HUD itself is hidden while
 locked, so nothing on the prompter intercepts your pointer.
@@ -116,7 +133,10 @@ assets/
 └── icon.svg                  Application icon.
 
 .github/workflows/
-└── build.yml                 CI/CD pipeline for Linux, macOS, Windows.
+── build.yml                 CI build for Linux, macOS, Windows.
+├── release.yml               Tag-triggered release pipeline.
+├── nightly.yml               Daily scheduled builds.
+└── pr-build.yml              Comment-triggered PR artifact builds.
 ```
 
 ## Development
@@ -144,11 +164,15 @@ npm run build
   `setAlwaysOnTop` (the underlying APIs Electron uses). X11 (Xorg) and recent
   KDE / GNOME Wayland work fine; some lighter Wayland compositors may ignore
   these hints. If click-through or always-on-top does not work, the prompter
-  is still useful - just drag it to a corner.
+  is still useful — just drag it to a corner.
 - On macOS you may need to grant Accessibility / Screen Recording permissions
   to the app for click-through to behave predictably across all apps.
 - The app is not code-signed. Your OS may warn on first launch.
 
+## Contributing
+
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
 ## License
 
-MIT
+MIT — see [LICENSE](LICENSE) for details.
