@@ -5,7 +5,6 @@ const frame = $("frame");
 const track = $("track");
 const text = $("text");
 const readArea = $("readArea");
-const readingLine = $("readingLine");
 const hud = $("hud");
 const btnPlay = $("btnPlay");
 const btnReset = $("btnReset");
