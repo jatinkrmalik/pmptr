@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-06-21
+
+### Fixed
+- Moved `electron` to `peerDependencies` so `electron-builder` can produce native installers while `npm install -g pmptr` still works
+
 ## [0.1.0] - 2026-06-21
 
 ### Added
@@ -24,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CI/CD pipelines (build, release, nightly, PR artifacts)
 - Multi-platform builds (macOS, Windows, Linux)
 
-[Unreleased]: https://github.com/jatinkrmalik/pmptr/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/jatinkrmalik/pmptr/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/jatinkrmalik/pmptr/releases/tag/v0.1.1
 [0.1.0]: https://github.com/jatinkrmalik/pmptr/releases/tag/v0.1.0
 [0.1.0-beta.1]: https://github.com/jatinkrmalik/pmptr/releases/tag/v0.1.0-beta.1
