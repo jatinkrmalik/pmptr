@@ -5,3 +5,12 @@ node_modules/
 .vscode/
 dist/
 out/
+*.dmg
+*.exe
+*.AppImage
+*.deb
+*.zip
+Thumbs.db
+*.tgz
+.env
+.env.local
