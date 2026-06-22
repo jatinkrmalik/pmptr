@@ -315,9 +315,6 @@ main {
   overflow: hidden;
   position: relative;
   padding: 0 26px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 .demo-reading-line {
   position: absolute;
@@ -340,7 +337,7 @@ main {
   z-index: 1;
 }
 .demo-scroll {
-  font: 600 22px/1.9 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font: 600 22px/44px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: var(--fg);
   text-align: center;
   white-space: nowrap;
@@ -348,7 +345,8 @@ main {
 }
 .demo-scroll p {
   margin: 0;
-  height: 1.9em;
+  height: 44px;
+  line-height: 44px;
   color: rgba(245, 241, 234, 0.5);
   transition: color 200ms ease;
 }
@@ -357,7 +355,7 @@ main {
 }
 @keyframes demo-scroll {
   0% { transform: translateY(0); }
-  100% { transform: translateY(-50%); }
+  100% { transform: translateY(-352px); }
 }
 .demo-hud {
   display: flex;
