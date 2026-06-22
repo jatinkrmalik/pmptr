@@ -1,23 +1,66 @@
 # <img src="assets/icon.svg" height="40" align="center" /> pmptr
 
-[![Release](https://img.shields.io/github/v/release/jatinkrmalik/pmptr?include_prereleases)](https://github.com/jatinkrmalik/pmptr/releases)
-[![Build](https://github.com/jatinkrmalik/pmptr/actions/workflows/build.yml/badge.svg)](https://github.com/jatinkrmalik/pmptr/actions/workflows/build.yml)
-[![Release Pipeline](https://github.com/jatinkrmalik/pmptr/actions/workflows/release.yml/badge.svg)](https://github.com/jatinkrmalik/pmptr/actions/workflows/release.yml)
-[![Nightly](https://github.com/jatinkrmalik/pmptr/actions/workflows/nightly.yml/badge.svg)](https://github.com/jatinkrmalik/pmptr/actions/workflows/nightly.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Platform](https://img.shields.io/badge/platform-linux%20%7C%20macos%20%7C%20windows-blue)](https://github.com/jatinkrmalik/pmptr)
-[![Node](https://img.shields.io/badge/node-%3E%3D20-339933)](https://nodejs.org)
-[![Electron](https://img.shields.io/badge/electron-31-47848F)](https://www.electronjs.org)
+<p align="center">
+  <a href="https://www.npmjs.com/package/pmptr">
+    <img src="https://img.shields.io/npm/v/pmptr?style=flat-square&color=cb3837" alt="npm version">
+  </a>
+  <a href="https://www.npmjs.com/package/pmptr">
+    <img src="https://img.shields.io/npm/dt/pmptr?style=flat-square&color=cb3837" alt="npm downloads">
+  </a>
+  <a href="https://github.com/jatinkrmalik/pmptr/releases">
+    <img src="https://img.shields.io/github/v/release/jatinkrmalik/pmptr?include_prereleases&style=flat-square" alt="GitHub release">
+  </a>
+  <a href="https://github.com/jatinkrmalik/pmptr/actions/workflows/build.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/jatinkrmalik/pmptr/build.yml?branch=main&style=flat-square&label=build" alt="Build">
+  </a>
+  <a href="https://github.com/jatinkrmalik/pmptr/actions/workflows/release.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/jatinkrmalik/pmptr/release.yml?style=flat-square&label=release" alt="Release Pipeline">
+  </a>
+</p>
 
-> **Beta** — pmptr is in active beta. Expect occasional bugs and breaking changes.
-> Please [report issues](https://github.com/jatinkrmalik/pmptr/issues) you encounter.
+<p align="center">
+  <img src="https://img.shields.io/badge/status-beta-orange?style=flat-square" alt="Status: beta">
+  <a href="https://opensource.org/licenses/MIT">
+    <img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square" alt="License: MIT">
+  </a>
+  <img src="https://img.shields.io/badge/platform-linux%20%7C%20macos%20%7C%20windows-blue?style=flat-square" alt="Platform">
+  <img src="https://img.shields.io/badge/node-%3E%3D20-339933?style=flat-square" alt="Node">
+  <img src="https://img.shields.io/badge/electron-31-47848F?style=flat-square" alt="Electron">
+</p>
 
-A minimal virtual teleprompter that lives as a transparent, always-on-top,
+**pmptr** is a minimal virtual teleprompter that lives as a transparent, always-on-top,
 click-through overlay over whatever you do on your screen.
+
+## Features
+
+- 🎛️ **Control window** - paste your script, tune speed, size, colors, opacity, mirror,
+  window dimensions, and more.
+- 🪟 **Floating prompter window** - transparent, frameless, always on top, with
+  a true OS-level click-through "lock" so you can keep working with your mouse
+  on whatever is underneath.
+- 💾 **Settings persistence** - settings are saved to disk in your Electron user-data folder.
+- ⚡ **Live updates** - edits in the control window apply to the prompter instantly.
+- ⌨️ **Keyboard shortcuts** - play/pause, reset, speed control, and click-through toggle.
+
+## Quick Start
+
+The fastest way to try pmptr is via **npm**:
+
+```bash
+npm install -g pmptr
+pmptr
+```
+
+Requires [Node.js](https://nodejs.org) **20** or later.
+
+Then click **Open floating prompter** in the control window.
 
 ## Download
 
-Grab the latest build from the [Releases page](https://github.com/jatinkrmalik/pmptr/releases).
+> **Beta** - pmptr is in active beta. Expect occasional bugs and breaking changes.
+> Please [report issues](https://github.com/jatinkrmalik/pmptr/issues) you encounter.
+
+Prefer a native installer? Grab the latest build from the [Releases page](https://github.com/jatinkrmalik/pmptr/releases).
 
 | Platform | Format |
 |----------|--------|
@@ -25,18 +68,7 @@ Grab the latest build from the [Releases page](https://github.com/jatinkrmalik/p
 | Windows  | `.exe` (NSIS installer) |
 | Linux    | `.AppImage` or `.deb` |
 
-Not code-signed — your OS may warn on first launch. That's expected during beta.
-
-## Install from npm
-
-If you have [Node.js](https://nodejs.org) installed, you can install `pmptr` globally and run it from your terminal:
-
-```bash
-npm install -g pmptr
-pmptr
-```
-
-Requires Node.js **20** or later.
+Not code-signed - your OS may warn on first launch. That's expected during beta.
 
 ## Run from source
 
@@ -46,18 +78,6 @@ cd pmptr
 npm install
 npm start
 ```
-
-Then click **Open floating prompter** in the control window.
-
-## Features
-
-- **Control window** — paste your script, tune speed, size, colors, opacity, mirror,
-  window dimensions, and more.
-- **Floating prompter window** — transparent, frameless, always on top, with
-  a true OS-level click-through "lock" so you can keep working with your mouse
-  on whatever is underneath.
-- Settings persist to disk in your Electron user-data folder.
-- Live updates: edits in the control window apply to the prompter instantly.
 
 ## Shortcuts (in the floating window)
 
@@ -74,43 +94,51 @@ You can also use the small HUD in the bottom-right of the floating window
 
 ## Architecture
 
-```mermaid
-graph TB
-    subgraph "Electron Main Process"
-        M[main.js]
-        SETTINGS[(settings.json)]
-    end
-
-    subgraph "Control Window"
-        CH[control.html]
-        CJ[control.js]
-    end
-
-    subgraph "Prompter Window"
-        PH[prompter.html]
-        PJ[prompter.js]
-    end
-
-    M -->|spawns| CH
-    M -->|spawns| PH
-    M <-->|save/load| SETTINGS
-    CJ -->|IPC: settings changed| M
-    M -->|IPC: settings| PH
-    PH -->|IPC: state| M
-    M -->|IPC: state| CJ
 ```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              pmptr Architecture                              │
+└─────────────────────────────────────────────────────────────────────────────┘
 
-The app runs in two Electron `BrowserWindow` instances that communicate
-through IPC handlers in the main process. The control window is where you
-paste your script and adjust settings; the prompter window is the
-transparent, always-on-top overlay that scrolls the text. Settings are
-persisted to `settings.json` in the Electron user-data directory.
+                              ┌─────────────────────┐
+                              │     Main process    │
+                              │  src/main/main.js   │  Creates windows, owns
+                              │ src/main/preload.js │  IPC, click-through,
+                              │                     │  always-on-top, settings
+                              └──────────┬──────────┘
+                                         │
+              ┌──────────────────────────┼──────────────────────────┐
+              │ spawns                   │ spawns                   │ read/write
+              ▼                          ▼                          ▼
+┌─────────────────────┐      ┌─────────────────────┐      ┌──────────────────┐
+│    Control window   │      │   Prompter window   │      │   settings.json  │
+│ src/control/        │      │ src/prompter/       │      │  (Electron user  │
+│   control.html      │      │   prompter.html     │      │   data directory)│
+│   control.js        │      │   prompter.js       │      └──────────────────┘
+└─────────────────────┘      │ prompter-preload.js │
+                             └─────────────────────┘
+
+Data flow
+─────────
+
+  Control window              Main process             Prompter window
+        │                          │                          │
+        │── IPC: settings changed ─►│                          │
+        │                          │── IPC: settings ─────────►│
+        │                          │                          │
+        │◄──────── IPC: state ─────│◄──────── IPC: state ──────│
+        │                          │                          │
+
+- The **main process** spawns both windows and persists settings to `settings.json`.
+- The **control window** sends new settings to the main process over IPC.
+- The **prompter window** receives settings from the main process and reports its state back.
+- Live edits in the control window are reflected in the prompter instantly.
+```
 
 ## How the click-through works
 
 The prompter is a separate `BrowserWindow` with `transparent: true`, `frame: false`,
 and `alwaysOnTop: true`. When you toggle "click-through" (the lock), the main
-process calls `win.setIgnoreMouseEvents(true, { forward: true })` — clicks
+process calls `win.setIgnoreMouseEvents(true, { forward: true })` - clicks
 and wheel events fall straight through to whatever app is behind, while the
 window stays visible and keeps scrolling. The HUD itself is hidden while
 locked, so nothing on the prompter intercepts your pointer.
@@ -175,7 +203,7 @@ npm run build
   `setAlwaysOnTop` (the underlying APIs Electron uses). X11 (Xorg) and recent
   KDE / GNOME Wayland work fine; some lighter Wayland compositors may ignore
   these hints. If click-through or always-on-top does not work, the prompter
-  is still useful — just drag it to a corner.
+  is still useful - just drag it to a corner.
 - On macOS you may need to grant Accessibility / Screen Recording permissions
   to the app for click-through to behave predictably across all apps.
 - The app is not code-signed. Your OS may warn on first launch.
@@ -186,4 +214,4 @@ Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## License
 
-MIT — see [LICENSE](LICENSE) for details.
+MIT - see [LICENSE](LICENSE) for details.
