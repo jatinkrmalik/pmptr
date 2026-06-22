@@ -26,6 +26,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -40,6 +41,7 @@ body {
     "Helvetica Neue", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
 a {
@@ -191,6 +193,11 @@ main {
   grid-template-columns: 1.05fr 1fr;
   gap: 48px;
   align-items: center;
+}
+.hero-grid > * {
+  /* prevent grid items from forcing the column to expand to fit
+     intrinsic min-content of the demo (otherwise mobile overflows) */
+  min-width: 0;
 }
 .hero-title {
   margin: 0 0 14px;
@@ -383,6 +390,7 @@ main {
   }
   .hero-demo {
     max-width: 420px;
+    width: 100%;
   }
   .hero {
     padding: 56px 0 48px;
@@ -398,11 +406,88 @@ main {
   .hero-tag {
     font-size: 16px;
   }
+  .hero-demo {
+    max-width: 100%;
+    /* disable 3D perspective on small screens so the rotated window
+       can't paint outside its parent column and trigger horizontal
+       scroll on the page */
+    perspective: none;
+  }
+  .demo-window {
+    transform: none;
+    animation: none;
+  }
   .demo-viewport {
     height: 240px;
   }
   .demo-scroll {
     font-size: 18px;
+  }
+}
+@media (max-width: 480px) {
+  .hero {
+    padding: 40px 0 36px;
+  }
+  .hero-title {
+    font-size: 38px;
+    letter-spacing: -1.5px;
+  }
+  .hero-tag {
+    font-size: 15px;
+  }
+  .hero-actions {
+    width: 100%;
+  }
+  .hero-actions .btn {
+    flex: 1 1 auto;
+  }
+  .demo-viewport {
+    height: 200px;
+  }
+  .demo-scroll {
+    /* keep long lines on one line (the scroll effect needs it), but
+       shrink enough that the longest line ("Your mouse keeps working
+       on whatever is below.") fits inside the viewport on a 360px phone.
+       12px + 12px padding is the smallest combo that fits all common
+       phones (iPhone SE / small Android included). */
+    font-size: 12px;
+    line-height: 26px;
+    /* min-width: 0 lets the nowrap content respect its parent's width
+       instead of forcing the parent to grow */
+    min-width: 0;
+    max-width: 100%;
+    animation-name: demo-scroll-sm;
+    animation-duration: 18s;
+  }
+  .demo-scroll p {
+    height: 26px;
+    line-height: 26px;
+  }
+  .demo-reading-line {
+    left: 12px;
+    right: 12px;
+  }
+  .demo-viewport {
+    padding: 0 12px;
+  }
+}
+@keyframes demo-scroll-sm {
+  /* 8 lines × 26px = 208px; matches the duplicated paragraph block for a seamless loop */
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-208px); }
+}
+@media (max-width: 360px) {
+  /* very small phones / narrow foldables: scale the whole demo down
+     so the longest line still fits. At 360px width the inner is 286px;
+     even at 12px the longest line is 286px so it's right at the edge.
+     Scaling the window buys a little extra room. */
+  .demo-window {
+    transform: scale(0.9);
+    transform-origin: top center;
+  }
+  .hero-demo {
+    /* give the scaled window room vertically without overflowing the column */
+    min-height: 220px;
   }
 }
 
