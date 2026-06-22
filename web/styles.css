@@ -26,6 +26,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -40,6 +41,7 @@ body {
     "Helvetica Neue", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
 a {
@@ -191,6 +193,11 @@ main {
   grid-template-columns: 1.05fr 1fr;
   gap: 48px;
   align-items: center;
+}
+.hero-grid > * {
+  /* prevent grid items from forcing the column to expand to fit
+     intrinsic min-content of the demo (otherwise mobile overflows) */
+  min-width: 0;
 }
 .hero-title {
   margin: 0 0 14px;
@@ -357,6 +364,11 @@ main {
   0% { transform: translateY(0); }
   100% { transform: translateY(-352px); }
 }
+@keyframes demo-scroll-sm {
+  /* 8 lines × 36px = 288px; matches the duplicated paragraph block for a seamless loop */
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-288px); }
+}
 .demo-hud {
   display: flex;
   gap: 8px;
@@ -383,6 +395,7 @@ main {
   }
   .hero-demo {
     max-width: 420px;
+    width: 100%;
   }
   .hero {
     padding: 56px 0 48px;
@@ -398,11 +411,60 @@ main {
   .hero-tag {
     font-size: 16px;
   }
+  .hero-demo {
+    max-width: 100%;
+    /* disable 3D perspective on small screens so the rotated window
+       can't paint outside its parent column and trigger horizontal
+       scroll on the page */
+    perspective: none;
+  }
+  .demo-window {
+    transform: none;
+    animation: none;
+  }
   .demo-viewport {
     height: 240px;
   }
   .demo-scroll {
     font-size: 18px;
+  }
+}
+@media (max-width: 480px) {
+  .hero {
+    padding: 40px 0 36px;
+  }
+  .hero-title {
+    font-size: 38px;
+    letter-spacing: -1.5px;
+  }
+  .hero-tag {
+    font-size: 15px;
+  }
+  .hero-actions {
+    width: 100%;
+  }
+  .hero-actions .btn {
+    flex: 1 1 auto;
+  }
+  .demo-viewport {
+    height: 200px;
+  }
+  .demo-scroll {
+    font-size: 16px;
+    line-height: 36px;
+    animation-name: demo-scroll-sm;
+    animation-duration: 18s;
+  }
+  .demo-scroll p {
+    height: 36px;
+    line-height: 36px;
+  }
+  .demo-reading-line {
+    left: 18px;
+    right: 18px;
+  }
+  .demo-viewport {
+    padding: 0 18px;
   }
 }
 
