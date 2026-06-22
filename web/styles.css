@@ -364,11 +364,6 @@ main {
   0% { transform: translateY(0); }
   100% { transform: translateY(-352px); }
 }
-@keyframes demo-scroll-sm {
-  /* 8 lines × 36px = 288px; matches the duplicated paragraph block for a seamless loop */
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-288px); }
-}
 .demo-hud {
   display: flex;
   gap: 8px;
@@ -450,21 +445,49 @@ main {
     height: 200px;
   }
   .demo-scroll {
-    font-size: 16px;
-    line-height: 36px;
+    /* keep long lines on one line (the scroll effect needs it), but
+       shrink enough that the longest line ("Your mouse keeps working
+       on whatever is below.") fits inside the viewport on a 360px phone.
+       12px + 12px padding is the smallest combo that fits all common
+       phones (iPhone SE / small Android included). */
+    font-size: 12px;
+    line-height: 26px;
+    /* min-width: 0 lets the nowrap content respect its parent's width
+       instead of forcing the parent to grow */
+    min-width: 0;
+    max-width: 100%;
     animation-name: demo-scroll-sm;
     animation-duration: 18s;
   }
   .demo-scroll p {
-    height: 36px;
-    line-height: 36px;
+    height: 26px;
+    line-height: 26px;
   }
   .demo-reading-line {
-    left: 18px;
-    right: 18px;
+    left: 12px;
+    right: 12px;
   }
   .demo-viewport {
-    padding: 0 18px;
+    padding: 0 12px;
+  }
+}
+@keyframes demo-scroll-sm {
+  /* 8 lines × 26px = 208px; matches the duplicated paragraph block for a seamless loop */
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-208px); }
+}
+@media (max-width: 360px) {
+  /* very small phones / narrow foldables: scale the whole demo down
+     so the longest line still fits. At 360px width the inner is 286px;
+     even at 12px the longest line is 286px so it's right at the edge.
+     Scaling the window buys a little extra room. */
+  .demo-window {
+    transform: scale(0.9);
+    transform-origin: top center;
+  }
+  .hero-demo {
+    /* give the scaled window room vertically without overflowing the column */
+    min-height: 220px;
   }
 }
 
