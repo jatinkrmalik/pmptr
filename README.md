@@ -19,6 +19,7 @@
 </p>
 
 <p align="center">
+  <img src="https://img.shields.io/badge/status-beta-orange?style=flat-square" alt="Status: beta">
   <a href="https://opensource.org/licenses/MIT">
     <img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square" alt="License: MIT">
   </a>
@@ -27,22 +28,19 @@
   <img src="https://img.shields.io/badge/electron-31-47848F?style=flat-square" alt="Electron">
 </p>
 
-> **Beta** — pmptr is in active beta. Expect occasional bugs and breaking changes.
-> Please [report issues](https://github.com/jatinkrmalik/pmptr/issues) you encounter.
-
 **pmptr** is a minimal virtual teleprompter that lives as a transparent, always-on-top,
 click-through overlay over whatever you do on your screen.
 
 ## Features
 
-- 🎛️ **Control window** — paste your script, tune speed, size, colors, opacity, mirror,
+- 🎛️ **Control window** - paste your script, tune speed, size, colors, opacity, mirror,
   window dimensions, and more.
-- 🪟 **Floating prompter window** — transparent, frameless, always on top, with
+- 🪟 **Floating prompter window** - transparent, frameless, always on top, with
   a true OS-level click-through "lock" so you can keep working with your mouse
   on whatever is underneath.
-- 💾 **Settings persistence** — settings are saved to disk in your Electron user-data folder.
-- ⚡ **Live updates** — edits in the control window apply to the prompter instantly.
-- ⌨️ **Keyboard shortcuts** — play/pause, reset, speed control, and click-through toggle.
+- 💾 **Settings persistence** - settings are saved to disk in your Electron user-data folder.
+- ⚡ **Live updates** - edits in the control window apply to the prompter instantly.
+- ⌨️ **Keyboard shortcuts** - play/pause, reset, speed control, and click-through toggle.
 
 ## Quick Start
 
@@ -59,6 +57,9 @@ Then click **Open floating prompter** in the control window.
 
 ## Download
 
+> **Beta** - pmptr is in active beta. Expect occasional bugs and breaking changes.
+> Please [report issues](https://github.com/jatinkrmalik/pmptr/issues) you encounter.
+
 Prefer a native installer? Grab the latest build from the [Releases page](https://github.com/jatinkrmalik/pmptr/releases).
 
 | Platform | Format |
@@ -67,7 +68,7 @@ Prefer a native installer? Grab the latest build from the [Releases page](https:
 | Windows  | `.exe` (NSIS installer) |
 | Linux    | `.AppImage` or `.deb` |
 
-Not code-signed — your OS may warn on first launch. That's expected during beta.
+Not code-signed - your OS may warn on first launch. That's expected during beta.
 
 ## Run from source
 
@@ -93,35 +94,51 @@ You can also use the small HUD in the bottom-right of the floating window
 
 ## Architecture
 
-pmptr runs as a single Electron application with three parts:
-
-| Part | Files | Responsibility |
-|------|-------|----------------|
-| **Main process** | `src/main/main.js`, `src/main/preload.js` | Creates both windows, owns IPC handlers, manages click-through / always-on-top, reads and writes `settings.json`. |
-| **Control window** | `src/control/control.html`, `src/control/control.js` | UI where you paste the script and adjust settings. |
-| **Prompter window** | `src/prompter/prompter.html`, `src/prompter/prompter.js`, `src/prompter/prompter-preload.js` | Transparent overlay that scrolls the text and responds to shortcuts. |
-
-### Data flow
-
 ```
-┌─────────────────┐         ┌─────────────────┐         ┌─────────────────┐
-│  Control window │◄───────►│   Main process  │◄───────►│  Prompter window│
-│  (settings UI)  │  state  │  (settings.json)│ settings│  (overlay/HUD)  │
-└─────────────────┘         └─────────────────┘         └─────────────────┘
-         │                            ▲
-         └──── settings changed ──────┘
-```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              pmptr Architecture                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+                              ┌─────────────────────┐
+                              │     Main process    │
+                              │  src/main/main.js   │  Creates windows, owns
+                              │ src/main/preload.js │  IPC, click-through,
+                              │                     │  always-on-top, settings
+                              └──────────┬──────────┘
+                                         │
+              ┌──────────────────────────┼──────────────────────────┐
+              │ spawns                   │ spawns                   │ read/write
+              ▼                          ▼                          ▼
+┌─────────────────────┐      ┌─────────────────────┐      ┌──────────────────┐
+│    Control window   │      │   Prompter window   │      │   settings.json  │
+│ src/control/        │      │ src/prompter/       │      │  (Electron user  │
+│   control.html      │      │   prompter.html     │      │   data directory)│
+│   control.js        │      │   prompter.js       │      └──────────────────┘
+└─────────────────────┘      │ prompter-preload.js │
+                             └─────────────────────┘
+
+Data flow
+─────────
+
+  Control window              Main process             Prompter window
+        │                          │                          │
+        │── IPC: settings changed ─►│                          │
+        │                          │── IPC: settings ─────────►│
+        │                          │                          │
+        │◄──────── IPC: state ─────│◄──────── IPC: state ──────│
+        │                          │                          │
 
 - The **main process** spawns both windows and persists settings to `settings.json`.
 - The **control window** sends new settings to the main process over IPC.
 - The **prompter window** receives settings from the main process and reports its state back.
 - Live edits in the control window are reflected in the prompter instantly.
+```
 
 ## How the click-through works
 
 The prompter is a separate `BrowserWindow` with `transparent: true`, `frame: false`,
 and `alwaysOnTop: true`. When you toggle "click-through" (the lock), the main
-process calls `win.setIgnoreMouseEvents(true, { forward: true })` — clicks
+process calls `win.setIgnoreMouseEvents(true, { forward: true })` - clicks
 and wheel events fall straight through to whatever app is behind, while the
 window stays visible and keeps scrolling. The HUD itself is hidden while
 locked, so nothing on the prompter intercepts your pointer.
@@ -186,7 +203,7 @@ npm run build
   `setAlwaysOnTop` (the underlying APIs Electron uses). X11 (Xorg) and recent
   KDE / GNOME Wayland work fine; some lighter Wayland compositors may ignore
   these hints. If click-through or always-on-top does not work, the prompter
-  is still useful — just drag it to a corner.
+  is still useful - just drag it to a corner.
 - On macOS you may need to grant Accessibility / Screen Recording permissions
   to the app for click-through to behave predictably across all apps.
 - The app is not code-signed. Your OS may warn on first launch.
@@ -197,4 +214,4 @@ Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## License
 
-MIT — see [LICENSE](LICENSE) for details.
+MIT - see [LICENSE](LICENSE) for details.
