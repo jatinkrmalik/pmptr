@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <radialGradient id="glow" cx="78%" cy="0%" r="65%">
+      <stop offset="0%" stop-color="#ff5b3a" stop-opacity="0.22"/>
+      <stop offset="60%" stop-color="#ff5b3a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="6%" cy="18%" r="55%">
+      <stop offset="0%" stop-color="#ffb648" stop-opacity="0.10"/>
+      <stop offset="70%" stop-color="#ffb648" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="title" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fff7ee"/>
+      <stop offset="60%" stop-color="#f5f1ea"/>
+      <stop offset="100%" stop-color="#c9bfb4"/>
+    </linearGradient>
+    <linearGradient id="prompterBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#141210" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#0a0908" stop-opacity="0.75"/>
+    </linearGradient>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="14"/>
+    </filter>
+  </defs>
+
+  <!-- background -->
+  <rect width="1200" height="630" fill="#0a0908"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <rect width="1200" height="630" fill="url(#glow2)"/>
+
+  <!-- top bar -->
+  <rect x="0" y="0" width="1200" height="2" fill="#2b2620"/>
+
+  <!-- ===== LEFT: identity ===== -->
+  <g transform="translate(80, 150)">
+    <!-- icon -->
+    <g transform="translate(0, 0)">
+      <rect width="88" height="88" rx="20" fill="#000000"/>
+      <rect x="20" y="20" width="48" height="48" rx="11" fill="#ffffff"/>
+      <rect x="29" y="32" width="30" height="5" rx="2.5" fill="#000000"/>
+      <rect x="29" y="42" width="22" height="5" rx="2.5" fill="#000000" opacity="0.6"/>
+      <rect x="29" y="52" width="27" height="5" rx="2.5" fill="#000000" opacity="0.4"/>
+      <circle cx="62" cy="28" r="3" fill="#ff5b3a"/>
+    </g>
+
+    <!-- wordmark -->
+    <text x="0" y="160" font-size="92" font-weight="700" letter-spacing="-3" fill="url(#title)">pmptr</text>
+
+    <!-- tagline -->
+    <text x="0" y="210" font-size="26" fill="#9c928a">A minimal virtual teleprompter that floats</text>
+    <text x="0" y="246" font-size="26" fill="#9c928a">transparent &amp; click-through over your screen.</text>
+
+    <!-- pills -->
+    <g transform="translate(0, 290)">
+      <g>
+        <rect width="92" height="34" rx="17" fill="#1d1916" stroke="#39322a"/>
+        <text x="46" y="23" font-size="14" font-weight="600" text-anchor="middle" fill="#6bd58a">free</text>
+      </g>
+      <g transform="translate(102, 0)">
+        <rect width="148" height="34" rx="17" fill="#1d1916" stroke="#39322a"/>
+        <text x="74" y="23" font-size="14" font-weight="600" text-anchor="middle" fill="#f5f1ea">no credit card</text>
+      </g>
+      <g transform="translate(260, 0)">
+        <rect width="104" height="34" rx="17" fill="#1d1916" stroke="#39322a"/>
+        <text x="52" y="23" font-size="14" font-weight="600" text-anchor="middle" fill="#f5f1ea">ad-free</text>
+      </g>
+      <g transform="translate(374, 0)">
+        <rect width="132" height="34" rx="17" fill="#1d1916" stroke="#39322a"/>
+        <text x="66" y="23" font-size="14" font-weight="600" text-anchor="middle" fill="#ffb648">open source</text>
+      </g>
+    </g>
+
+    <!-- footer line -->
+    <text x="0" y="370" font-size="16" fill="#6f665e">macOS · Windows · Linux · MIT licensed</text>
+  </g>
+
+  <!-- ===== RIGHT: teleprompter mock ===== -->
+  <g transform="translate(700, 110)">
+    <!-- soft shadow under window -->
+    <rect x="-8" y="20" width="448" height="430" rx="18" fill="#000000" opacity="0.5" filter="url(#soft)"/>
+
+    <!-- window -->
+    <g>
+      <rect width="440" height="410" rx="14" fill="url(#prompterBg)" stroke="#39322a"/>
+
+      <!-- title bar -->
+      <rect width="440" height="38" rx="14" fill="#000000" opacity="0.3"/>
+      <rect y="24" width="440" height="14" fill="#000000" opacity="0.3"/>
+      <circle cx="20" cy="19" r="6" fill="#ff5f57"/>
+      <circle cx="40" cy="19" r="6" fill="#febc2e"/>
+      <circle cx="60" cy="19" r="6" fill="#28c840"/>
+      <text x="220" y="24" font-size="12" text-anchor="middle" fill="#6f665e">pmptr · floating prompter</text>
+
+      <!-- viewport -->
+      <rect x="0" y="38" width="440" height="334" fill="none"/>
+      <!-- center guide line (teleprompter reading bar) -->
+      <rect x="40" y="200" width="360" height="2" fill="#ff5b3a" opacity="0.35"/>
+
+      <!-- script lines (scrolling illusion) -->
+      <g font-size="22" font-weight="600" text-anchor="middle">
+        <text x="220" y="92" fill="#f5f1ea" opacity="0.25">Welcome to pmptr.</text>
+        <text x="220" y="132" fill="#f5f1ea" opacity="0.45">A teleprompter that gets out of your way.</text>
+        <text x="220" y="172" fill="#ff5b3a" opacity="0.7">Transparent. Always on top. Click-through.</text>
+        <text x="220" y="212" fill="#fff7ee">Paste your script. Hit space. Speak.</text>
+        <text x="220" y="252" fill="#ff5b3a" opacity="0.7">Your mouse keeps working below.</text>
+        <text x="220" y="292" fill="#f5f1ea" opacity="0.45">Looks good on any background.</text>
+        <text x="220" y="332" fill="#f5f1ea" opacity="0.25">Lock it. Forget it. Just talk.</text>
+      </g>
+
+      <!-- top + bottom fade -->
+      <rect x="0" y="38" width="440" height="60" fill="url(#prompterBg)" opacity="0.9"/>
+      <rect x="0" y="312" width="440" height="60" fill="url(#prompterBg)" opacity="0.9"/>
+
+      <!-- hud -->
+      <g transform="translate(14, 372)">
+        <rect width="86" height="24" rx="12" fill="#1d1916" stroke="#39322a"/>
+        <text x="43" y="16" font-size="11" text-anchor="middle" fill="#6bd58a" font-family="ui-monospace, Menlo">▶ playing</text>
+      </g>
+      <g transform="translate(110, 372)">
+        <rect width="78" height="24" rx="12" fill="#1d1916" stroke="#39322a"/>
+        <text x="39" y="16" font-size="11" text-anchor="middle" fill="#9c928a" font-family="ui-monospace, Menlo">40 px/s</text>
+      </g>
+      <g transform="translate(318, 372)">
+        <rect width="108" height="24" rx="12" fill="#1d1916" stroke="#39322a"/>
+        <text x="54" y="16" font-size="11" text-anchor="middle" fill="#9c928a" font-family="ui-monospace, Menlo">click-through</text>
+      </g>
+    </g>
+  </g>
+</svg>
