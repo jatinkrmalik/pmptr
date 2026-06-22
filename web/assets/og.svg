@@ -96,10 +96,10 @@
       <rect x="40" y="200" width="360" height="2" fill="#ff5b3a" opacity="0.35"/>
 
       <!-- script lines (scrolling illusion) -->
-      <g font-size="22" font-weight="600" text-anchor="middle">
+      <g font-size="19" font-weight="600" text-anchor="middle">
         <text x="220" y="92" fill="#f5f1ea" opacity="0.25">Welcome to pmptr.</text>
         <text x="220" y="132" fill="#f5f1ea" opacity="0.45">A teleprompter that gets out of your way.</text>
-        <text x="220" y="172" fill="#ff5b3a" opacity="0.7">Transparent. Always on top. Click-through.</text>
+        <text x="220" y="172" fill="#ff5b3a" opacity="0.7">Transparent. Always on top.</text>
         <text x="220" y="212" fill="#fff7ee">Paste your script. Hit space. Speak.</text>
         <text x="220" y="252" fill="#ff5b3a" opacity="0.7">Your mouse keeps working below.</text>
         <text x="220" y="292" fill="#f5f1ea" opacity="0.45">Looks good on any background.</text>
