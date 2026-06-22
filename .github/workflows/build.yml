@@ -3,8 +3,14 @@ name: Build
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - "web/**"
+      - "**.md"
   pull_request:
     branches: [main]
+    paths-ignore:
+      - "web/**"
+      - "**.md"
 
 jobs:
   build:

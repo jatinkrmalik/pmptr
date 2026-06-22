@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>pmptr · a minimal virtual teleprompter</title>
+    <meta
+      name="description"
+      content="pmptr is a minimal, open-source virtual teleprompter that lives as a transparent, always-on-top, click-through overlay on your screen."
+    />
+    <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="pmptr · a minimal virtual teleprompter" />
+    <meta
+      property="og:description"
+      content="A minimal, free, open-source virtual teleprompter that floats transparent and click-through over your screen. No credit card. Ad-free forever."
+    />
+    <meta property="og:image" content="https://jatinkrmalik.github.io/pmptr/assets/og.png" />
+    <meta property="og:url" content="https://jatinkrmalik.github.io/pmptr/" />
+    <meta property="og:site_name" content="pmptr" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="pmptr · a minimal virtual teleprompter" />
+    <meta
+      name="twitter:description"
+      content="A minimal, free, open-source virtual teleprompter that floats transparent and click-through over your screen. No credit card. Ad-free forever."
+    />
+    <meta name="twitter:image" content="https://jatinkrmalik.github.io/pmptr/assets/og.png" />
+  </head>
+  <body>
+    <header class="nav">
+      <a class="nav-brand" href="#top">
+        <img src="assets/icon.svg" alt="" height="26" />
+        <span>pmptr</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#install">Install</a>
+        <a href="#shortcuts">Shortcuts</a>
+        <a href="#community">Community</a>
+      </nav>
+      <a class="btn ghost sm gh-btn" href="https://github.com/jatinkrmalik/pmptr" target="_blank" rel="noopener" aria-label="GitHub repository">
+        <svg class="gh-logo" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+        <span>GitHub</span>
+      </a>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1 class="hero-title">pmptr</h1>
+            <p class="hero-tag">
+              A minimal virtual teleprompter that floats over whatever you do.
+              Transparent, always on top, and click-through so your mouse keeps
+              working on whatever is underneath.
+            </p>
+            <div class="hero-actions">
+              <a class="btn primary" href="#install">Install</a>
+              <a class="btn ghost" id="download-btn" href="https://github.com/jatinkrmalik/pmptr/releases/latest" target="_blank" rel="noopener">
+                Download<span class="ver"></span>
+              </a>
+            </div>
+            <p class="hero-meta">
+              <span class="badge">beta</span>
+              <span class="dot">·</span>
+              <span>open source · MIT</span>
+              <span class="dot">·</span>
+              <span>macOS · Windows · Linux</span>
+            </p>
+            <ul class="hero-free">
+              <li><span class="free-check">✓</span> 100% free</li>
+              <li><span class="free-check">✓</span> no credit card</li>
+              <li><span class="free-check">✓</span> ad-free forever</li>
+              <li><span class="free-check">✓</span> open source</li>
+            </ul>
+          </div>
+
+          <div class="hero-demo">
+            <div class="demo-window" aria-hidden="true">
+              <div class="demo-bar">
+                <span class="dot red"></span>
+                <span class="dot amber"></span>
+                <span class="dot green"></span>
+                <span class="demo-title">pmptr · floating prompter</span>
+              </div>
+              <div class="demo-viewport">
+                <div class="demo-reading-line"></div>
+                <div class="demo-scroll">
+                  <p>Welcome to pmptr.</p>
+                  <p>A teleprompter that gets out of your way.</p>
+                  <p>Transparent. Always on top. Click-through.</p>
+                  <p>Paste your script. Hit space. Speak.</p>
+                  <p>Your mouse keeps working on whatever is below.</p>
+                  <p>Looks good on any background, bright or dark.</p>
+                  <p>Tune speed, size, color, opacity, mirror.</p>
+                  <p>Lock it. Forget it. Just talk.</p>
+                  <p>Welcome to pmptr.</p>
+                  <p>A teleprompter that gets out of your way.</p>
+                  <p>Transparent. Always on top. Click-through.</p>
+                  <p>Paste your script. Hit space. Speak.</p>
+                  <p>Your mouse keeps working on whatever is below.</p>
+                  <p>Looks good on any background, bright or dark.</p>
+                  <p>Tune speed, size, color, opacity, mirror.</p>
+                  <p>Lock it. Forget it. Just talk.</p>
+                </div>
+              </div>
+              <div class="demo-hud">
+                <span class="hud-pill">▶ playing</span>
+                <span class="hud-pill">40 px/s</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="features" class="section">
+        <h2 class="section-title">What it is</h2>
+        <p class="section-lead">
+          pmptr is a tiny desktop app that turns any script into a scrolling
+          overlay. Transparent, frameless, always on top. When you lock it,
+          your mouse clicks fall straight through to whatever is behind. Keep
+          your eyes on the camera and your hands on your work.
+        </p>
+
+        <div class="feature-grid">
+          <article class="card">
+            <h3>Floating prompter</h3>
+            <p>
+              A separate transparent, frameless, always-on-top window that
+              scrolls your script at the speed you choose.
+            </p>
+          </article>
+          <article class="card">
+            <h3>True click-through</h3>
+            <p>
+              OS-level mouse-event ignoring means clicks pass through to the
+              app underneath. The prompter stays visible; your work stays
+              clickable.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Control panel</h3>
+            <p>
+              Paste your script and tune speed, size, colors, opacity, mirror,
+              and window dimensions from one tidy window.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Live updates</h3>
+            <p>
+              Edits in the control window are reflected in the prompter
+              instantly. No reload, no restart.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Keyboard shortcuts</h3>
+            <p>
+              Play, pause, reset, change speed, and toggle click-through
+              without ever leaving your keyboard.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Settings persistence</h3>
+            <p>
+              Your preferences are saved to disk in your Electron user-data
+              folder and restored on the next launch.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="install" class="section">
+        <h2 class="section-title">Install</h2>
+        <p class="section-lead">
+          The fastest way to try pmptr is via <strong>npm</strong>. Requires
+          <a href="https://nodejs.org" target="_blank" rel="noopener">Node.js 20+</a>.
+        </p>
+
+        <div class="install-grid">
+          <div class="terminal" data-copy="npm install -g pmptr&#10;pmptr">
+            <div class="terminal-bar">
+              <span class="dot red"></span>
+              <span class="dot amber"></span>
+              <span class="dot green"></span>
+              <span class="terminal-title">~ pmptr</span>
+              <span class="terminal-copy">copy</span>
+            </div>
+            <pre><code><span class="prompt">$</span> npm install -g pmptr
+<span class="prompt">$</span> pmptr</code></pre>
+          </div>
+
+          <div class="terminal" data-copy="git clone https://github.com/jatinkrmalik/pmptr.git&#10;cd pmptr &amp;&amp; npm install&#10;npm start">
+            <div class="terminal-bar">
+              <span class="dot red"></span>
+              <span class="dot amber"></span>
+              <span class="dot green"></span>
+              <span class="terminal-title">~ pmptr (from source)</span>
+              <span class="terminal-copy">copy</span>
+            </div>
+            <pre><code><span class="prompt">$</span> git clone https://github.com/jatinkrmalik/pmptr.git
+<span class="prompt">$</span> cd pmptr &amp;&amp; npm install
+<span class="prompt">$</span> npm start</code></pre>
+          </div>
+        </div>
+
+        <div class="downloads card">
+          <h3>Prebuilt binaries</h3>
+          <p class="muted">
+            Prefer a native installer? Grab the latest build from the
+            <a href="https://github.com/jatinkrmalik/pmptr/releases" target="_blank" rel="noopener">Releases page</a>.
+          </p>
+          <ul class="platform-list">
+            <li><span class="plat-key">macOS</span><span class="plat-val">.dmg</span></li>
+            <li><span class="plat-key">Windows</span><span class="plat-val">.exe (NSIS)</span></li>
+            <li><span class="plat-key">Linux</span><span class="plat-val">.AppImage · .deb</span></li>
+          </ul>
+          <p class="muted small">
+            Not code-signed. Your OS may warn on first launch. That is expected
+            during beta.
+          </p>
+        </div>
+      </section>
+
+      <section id="shortcuts" class="section">
+        <h2 class="section-title">Shortcuts</h2>
+        <p class="section-lead">In the floating window:</p>
+        <div class="card shortcuts">
+          <table>
+            <tbody>
+              <tr><td><kbd>Space</kbd></td><td>Play / pause</td></tr>
+              <tr><td><kbd>R</kbd></td><td>Reset scroll to the top</td></tr>
+              <tr><td><kbd>↑</kbd> / <kbd>↓</kbd></td><td>Speed up or down by 5 px/s</td></tr>
+              <tr><td><kbd>L</kbd></td><td>Toggle click-through (lock / unlock)</td></tr>
+              <tr><td><kbd>Esc</kbd></td><td>Close the prompter</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="community" class="section">
+        <h2 class="section-title">Free, open source &amp; community</h2>
+        <p class="section-lead">
+          pmptr is <strong>free</strong>, <strong>open-source</strong> software
+          released under the MIT license. No credit card, no account, no
+          upsell. Ad-free forever. It is built in the open and contributions
+          are welcome.
+        </p>
+
+        <div class="community-grid">
+          <a class="card link-card" href="https://github.com/jatinkrmalik/pmptr/issues/new?template=bug_report.yml" target="_blank" rel="noopener">
+            <h3>Report a bug ↗</h3>
+            <p>Found something broken? Open an issue so it can be fixed.</p>
+          </a>
+          <a class="card link-card" href="https://github.com/jatinkrmalik/pmptr/issues/new?template=feature_request.yml" target="_blank" rel="noopener">
+            <h3>Request a feature ↗</h3>
+            <p>Have an idea that would make pmptr better? Suggest it.</p>
+          </a>
+          <a class="card link-card" href="https://github.com/jatinkrmalik/pmptr/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">
+            <h3>Contribute ↗</h3>
+            <p>Read the contributing guide and open a pull request.</p>
+          </a>
+          <a class="card link-card" href="https://github.com/jatinkrmalik/pmptr/blob/main/CODE_OF_CONDUCT.md" target="_blank" rel="noopener">
+            <h3>Code of conduct ↗</h3>
+            <p>Be excellent to each other.</p>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>
+        <a href="https://github.com/jatinkrmalik/pmptr">pmptr</a>
+        · <a href="https://github.com/jatinkrmalik/pmptr/blob/main/LICENSE">MIT licensed</a>
+        · made with care by <a href="https://x.com/intent/user?screen_name=jatinkrmalik" target="_blank" rel="noopener">Jatin Malik</a>
+      </p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
