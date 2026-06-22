@@ -53,6 +53,44 @@
     document.body.removeChild(ta);
   }
 
+  // Highlight the line at the reading position in the teleprompter demo
+  var demoScroll = document.querySelector(".demo-scroll");
+  if (demoScroll) {
+    var lines = demoScroll.querySelectorAll("p");
+    var viewport = demoScroll.parentElement;
+    var readingLineY = viewport.offsetHeight / 2;
+
+    function updateActiveLine() {
+      var scrollRect = demoScroll.getBoundingClientRect();
+      var viewportRect = viewport.getBoundingClientRect();
+      var scrollTop = scrollRect.top - viewportRect.top;
+
+      var activeIndex = -1;
+      for (var i = 0; i < lines.length; i++) {
+        var lineRect = lines[i].getBoundingClientRect();
+        var lineCenter = lineRect.top + lineRect.height / 2 - viewportRect.top;
+        if (Math.abs(lineCenter - readingLineY) < lineRect.height / 2) {
+          activeIndex = i;
+          break;
+        }
+      }
+
+      for (var i = 0; i < lines.length; i++) {
+        if (i === activeIndex) {
+          lines[i].classList.add("active");
+        } else {
+          lines[i].classList.remove("active");
+        }
+      }
+    }
+
+    function tick() {
+      updateActiveLine();
+      requestAnimationFrame(tick);
+    }
+    tick();
+  }
+
   // Subtle fade-in on scroll for sections
   if ("IntersectionObserver" in window) {
     var io = new IntersectionObserver(

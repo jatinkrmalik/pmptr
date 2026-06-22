@@ -319,28 +319,40 @@ main {
   align-items: center;
   justify-content: center;
 }
+.demo-reading-line {
+  position: absolute;
+  left: 26px;
+  right: 26px;
+  top: 50%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, var(--accent-2) 20%, var(--accent-2) 80%, transparent 100%);
+  transform: translateY(-50%);
+  z-index: 2;
+  pointer-events: none;
+  box-shadow: 0 0 12px rgba(255, 182, 72, 0.5);
+}
 .demo-viewport::after {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
   background: linear-gradient(180deg, var(--bg-2) 0%, transparent 22%, transparent 78%, var(--bg-2) 100%);
+  z-index: 1;
 }
 .demo-scroll {
   font: 600 22px/1.9 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: var(--fg);
   text-align: center;
   white-space: nowrap;
-  animation: demo-scroll 18s linear infinite;
+  animation: demo-scroll 24s linear infinite;
 }
 .demo-scroll p {
   margin: 0;
   height: 1.9em;
+  color: rgba(245, 241, 234, 0.5);
+  transition: color 200ms ease;
 }
-.demo-scroll p:nth-child(odd) {
-  color: #fff7ee;
-}
-.demo-scroll p:nth-child(even) {
+.demo-scroll p.active {
   color: var(--accent);
 }
 @keyframes demo-scroll {
