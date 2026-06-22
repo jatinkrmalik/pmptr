@@ -1,0 +1,35 @@
+name: Website check
+
+on:
+  pull_request:
+    paths:
+      - "web/**"
+      - ".github/workflows/web-pr.yml"
+  push:
+    branches: [main]
+    paths:
+      - "web/**"
+      - ".github/workflows/web-pr.yml"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Validate HTML
+        run: npx html-validate web/index.html
+
+      - name: Verify assets load
+        run: |
+          python3 -m http.server 8080 --directory web &
+          sleep 1
+          curl -fsS http://localhost:8080/ > /dev/null
+          curl -fsS http://localhost:8080/styles.css > /dev/null
+          curl -fsS http://localhost:8080/script.js > /dev/null
+          curl -fsS http://localhost:8080/assets/icon.svg > /dev/null
+          curl -fsS http://localhost:8080/assets/og.png > /dev/null
