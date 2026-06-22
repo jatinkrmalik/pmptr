@@ -86,7 +86,7 @@ npm start
 | `Space`   | Play / pause                            |
 | `R`       | Reset scroll to the top                 |
 | `↑` / `↓` | Speed ± 5 px/s                          |
-| `L`       | Toggle click-through (lock / unlock)   |
+| `L`       | Toggle click-through (lock / unlock)    |
 | `Esc`     | Close the prompter                      |
 
 You can also use the small HUD in the bottom-right of the floating window
@@ -96,7 +96,7 @@ You can also use the small HUD in the bottom-right of the floating window
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                              pmptr Architecture                              │
+│                              pmptr Architecture                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 
                               ┌─────────────────────┐
@@ -121,12 +121,12 @@ Data flow
 ─────────
 
   Control window              Main process             Prompter window
-        │                          │                          │
-        │── IPC: settings changed ─►│                          │
+        │                          │                           │
+        │── IPC: setting changed ─►│                           │
         │                          │── IPC: settings ─────────►│
-        │                          │                          │
+        │                          │                           │
         │◄──────── IPC: state ─────│◄──────── IPC: state ──────│
-        │                          │                          │
+        │                          │                           │
 
 - The **main process** spawns both windows and persists settings to `settings.json`.
 - The **control window** sends new settings to the main process over IPC.
