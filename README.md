@@ -151,8 +151,8 @@ locked, so nothing on the prompter intercepts your pointer.
 
 ## How voice follow works
 
-Voice follow is **off by default**; enable it with the checkbox in the
-control window's **Voice** section, the mic button in the prompter HUD, or
+Voice follow is **off by default**; enable it with the toggle in the
+control window's **Reading** tab, the mic button in the prompter HUD, or
 the `V` key. While enabled, the prompter listens to your microphone through
 the Web Audio API and runs a small voice-activity detector (signal level vs.
 an adaptive noise floor). While you speak, the text scrolls at your

@@ -72,6 +72,8 @@ const els = {
   voiceSens: $("voiceSens"),
   voiceSensOut: $("voiceSensOut"),
   voiceStatus: $("voiceStatus"),
+  voiceStatusText: $("voiceStatusText"),
+  voiceBlock: $("voiceBlock"),
   alwaysOnTop: $("alwaysOnTop"),
   clickThrough: $("clickThrough"),
   winWidth: $("winWidth"),
@@ -162,6 +164,7 @@ function fillForm() {
   els.winHeight.value = state.winHeight;
   els.position.value = state.position;
   renderOutputs();
+  renderVoiceStatus(state.voiceFollow ? "starting" : "off");
 }
 
 function queueSave() {
@@ -217,22 +220,28 @@ async function closePrompter() {
   await api.closePrompter();
 }
 
-const VOICE_STATUS_TEXT = {
-  off:
-    "Opt-in: the prompter scrolls while you speak and pauses when you " +
-    "stop, so it follows your pace. Uses your microphone locally - " +
-    "nothing is recorded or sent anywhere.",
-  starting: "Voice follow: requesting microphone…",
-  listening: "Voice follow: listening - scroll pauses while you are silent.",
-  speaking: "Voice follow: speech detected - scrolling.",
-  error:
-    "Voice follow: microphone unavailable - scrolling at constant speed. " +
-    "Check mic permissions/device, then toggle voice follow again.",
+const VOICE_STATUS = {
+  off: { text: "Off · microphone stays unused", kind: "idle" },
+  starting: { text: "Requesting microphone…", kind: "idle" },
+  listening: { text: "Listening · scroll paused", kind: "ok" },
+  speaking: { text: "Speaking · scrolling", kind: "live" },
+  error: {
+    text: "Mic unavailable · constant scroll",
+    kind: "warn",
+  },
 };
 
 function renderVoiceStatus(status) {
-  els.voiceStatus.textContent =
-    VOICE_STATUS_TEXT[status] || VOICE_STATUS_TEXT.off;
+  const entry = VOICE_STATUS[status] || VOICE_STATUS.off;
+  els.voiceStatusText.textContent = entry.text;
+  els.voiceStatus.dataset.kind = entry.kind;
+  const enabled = !!els.voiceFollow.checked;
+  els.voiceBlock.dataset.state = enabled
+    ? status === "error"
+      ? "error"
+      : "on"
+    : "off";
+  els.voiceSens.disabled = !enabled;
 }
 
 function setState(text, kind) {
@@ -305,6 +314,9 @@ function wire() {
       pushToPrompter();
       if (k === "clickThrough") applyClickThrough(els.clickThrough.checked);
       if (k === "alwaysOnTop") applyAlwaysOnTop(els.alwaysOnTop.checked);
+      if (k === "voiceFollow") {
+        renderVoiceStatus(els.voiceFollow.checked ? "starting" : "off");
+      }
     });
   }
   els.script.addEventListener("input", () => {
@@ -359,6 +371,9 @@ function wire() {
     ) {
       els.voiceFollow.checked = s.voiceFollow;
       state.voiceFollow = s.voiceFollow;
+      if (typeof s.voice !== "string") {
+        renderVoiceStatus(s.voiceFollow ? "starting" : "off");
+      }
       changed = true;
     }
     if (typeof s.voice === "string") {

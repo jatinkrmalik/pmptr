@@ -218,25 +218,38 @@ body {
 }
 
 #btnVoice.voice-on {
-  background: rgba(94, 224, 138, 0.16);
-  color: #5ee08a;
-}
-#btnVoice.speaking {
-  background: rgba(94, 224, 138, 0.35);
-  animation: voice-pulse 1s ease-in-out infinite;
-}
-#btnVoice.voice-err {
-  background: rgba(255, 107, 107, 0.25);
-  color: #ff6b6b;
+  background: color-mix(in srgb, var(--cue) 22%, transparent);
+  color: var(--cue);
 }
 
-@keyframes voice-pulse {
+#btnVoice.speaking {
+  background: color-mix(in srgb, var(--cue) 38%, transparent);
+  color: #fff;
+}
+
+#btnVoice.speaking .icon {
+  animation: voice-cue 1.05s ease-in-out infinite;
+}
+
+#btnVoice.voice-err {
+  background: rgba(255, 120, 100, 0.22);
+  color: #ffb4a8;
+}
+
+@keyframes voice-cue {
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgba(94, 224, 138, 0.45);
+    opacity: 0.72;
   }
   50% {
-    box-shadow: 0 0 0 4px rgba(94, 224, 138, 0.12);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #btnVoice.speaking .icon {
+    animation: none;
+    opacity: 1;
   }
 }
 
