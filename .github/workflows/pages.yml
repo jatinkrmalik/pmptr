@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "web/**"
+      - "demo/**"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -25,6 +26,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Include demo video assets
+        run: |
+          mkdir -p web/assets
+          cp demo/pmptr-demo.mp4 web/assets/pmptr-demo.mp4
+          cp demo/pmptr-demo-poster.jpg web/assets/pmptr-demo-poster.jpg
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5

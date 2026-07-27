@@ -31,6 +31,25 @@
 **pmptr** is a minimal virtual teleprompter that lives as a transparent, always-on-top,
 click-through overlay over whatever you do on your screen.
 
+## Demo
+
+<p align="center">
+  <a href="https://jatinkrmalik.github.io/pmptr/#demo">
+    <img src="demo/pmptr-demo-poster.jpg" alt="Watch the pmptr demo video" width="720" />
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://jatinkrmalik.github.io/pmptr/#demo"><strong>Watch the 1-minute demo</strong></a>
+  ·
+  <a href="demo/pmptr-demo.mp4">Download MP4</a>
+</p>
+
+Paste a script, tune speed and look, open the floating prompter, and keep working
+underneath with click-through lock. Full walkthrough with narration:
+[`demo/pmptr-demo.mp4`](demo/pmptr-demo.mp4)
+([attribution](demo/ATTRIBUTION.md)).
+
 ## Features
 
 - 🎛️ **Control window** - paste your script, tune speed, size, colors, opacity, mirror,

@@ -184,6 +184,22 @@ main {
   text-underline-offset: 2px;
 }
 
+.demo-video-wrap {
+  max-width: 920px;
+  margin: 0 auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #000;
+  box-shadow: var(--shadow);
+}
+.demo-video {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #000;
+}
+
 /* ---------- hero ---------- */
 .hero {
   padding: 88px 0 72px;

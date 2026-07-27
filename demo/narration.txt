@@ -1,0 +1,18 @@
+Meet pmptr — a minimal virtual teleprompter that floats over whatever you do on screen.
+
+This is the control window. Paste your script here… or load a sample to get started in one click.
+
+Tune reading speed, text size, and line height until the pace feels natural.
+
+Switch to Look to pick colors, opacity, and mirror mode — great for camera setups.
+
+Now open the floating prompter. Transparent. Frameless. Always on top.
+
+Hit Space to play. Your words scroll smoothly at the speed you chose.
+
+Press L to lock click-through — your mouse keeps working on whatever is underneath.
+
+Need a quick change? Nudge the speed live. Reset with R. Pause with Space.
+
+pmptr. Cue your words. Keep the stage clear.
+Free and open source — install with npm, or download for Mac, Windows, and Linux.
