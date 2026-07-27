@@ -173,7 +173,7 @@ assets/
 
 .github/workflows/
 ── build.yml                 CI build for Linux, macOS, Windows.
-├── release.yml               Tag-triggered release pipeline.
+├── release.yml               Tag-triggered release: installers, GitHub Release, npm publish.
 ├── nightly.yml               Daily scheduled builds.
 └── pr-build.yml              Comment-triggered PR artifact builds.
 ```
