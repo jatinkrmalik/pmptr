@@ -568,9 +568,9 @@ select:focus {
 }
 
 .voice-status[data-kind="live"] {
-  color: var(--live);
-  background: var(--live-soft);
-  border-color: rgba(15, 107, 92, 0.28);
+  color: var(--cue);
+  background: var(--cue-soft);
+  border-color: rgba(201, 86, 26, 0.28);
 }
 
 .voice-status[data-kind="live"] .voice-status-dot {
