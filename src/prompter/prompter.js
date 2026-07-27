@@ -76,16 +76,25 @@ function resetScroll() {
   render();
 }
 
+const ICON_PAUSE =
+  '<path fill="currentColor" d="M6.5 4.75a.75.75 0 0 0-.75.75v9a.75.75 0 0 0 .75.75h1.75a.75.75 0 0 0 .75-.75v-9a.75.75 0 0 0-.75-.75H6.5Zm5.25 0a.75.75 0 0 0-.75.75v9c0 .414.336.75.75.75H14a.75.75 0 0 0 .75-.75v-9a.75.75 0 0 0-.75-.75h-2.25Z"/>';
+const ICON_PLAY =
+  '<path fill="currentColor" d="M7.05 4.41A.75.75 0 0 0 6 5.1v9.8a.75.75 0 0 0 1.12.65l8.1-4.9a.75.75 0 0 0 0-1.3l-8.1-4.94a.75.75 0 0 0-.07-.03Z"/>';
+
+function setPlayIcon(isPlaying) {
+  iconPlay.innerHTML = isPlaying ? ICON_PAUSE : ICON_PLAY;
+}
+
 function play() {
   playing = true;
-  iconPlay.textContent = "❚❚";
+  setPlayIcon(true);
   lastTs = 0;
   if (!rafId) rafId = requestAnimationFrame(loop);
   api.sendState({ playing: true, locked });
 }
 function pause() {
   playing = false;
-  iconPlay.textContent = "▶";
+  setPlayIcon(false);
   if (rafId) cancelAnimationFrame(rafId);
   rafId = null;
   api.sendState({ playing: false, locked });
@@ -117,7 +126,7 @@ function render() {
 async function setLocked(v) {
   locked = !!v;
   hud.dataset.locked = String(locked);
-  iconLock.textContent = locked ? "🔒" : "🔓";
+  iconLock.dataset.state = locked ? "locked" : "open";
   btnLock.setAttribute("aria-pressed", String(locked));
   await api.setClickThrough(locked);
   api.sendState({ locked, playing });

@@ -26,12 +26,12 @@ function saveSettings(s) {
 
 function createControlWindow() {
   controlWin = new BrowserWindow({
-    width: 520,
-    height: 820,
-    minWidth: 380,
-    minHeight: 520,
+    width: 680,
+    height: 860,
+    minWidth: 420,
+    minHeight: 560,
     title: "pmptr",
-    backgroundColor: "#0f1115",
+    backgroundColor: "#e8edf4",
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,

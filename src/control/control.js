@@ -201,11 +201,31 @@ async function closePrompter() {
 
 function setState(text, kind) {
   els.state.textContent = text;
-  els.state.classList.remove("ok", "warn");
-  if (kind) els.state.classList.add(kind);
+  els.state.dataset.kind = kind || "idle";
+}
+
+function wireTabs() {
+  const tabs = Array.from(document.querySelectorAll(".tab"));
+  const panels = Array.from(document.querySelectorAll(".tab-panel"));
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const id = tab.dataset.tab;
+      tabs.forEach((t) => {
+        const on = t === tab;
+        t.classList.toggle("is-active", on);
+        t.setAttribute("aria-selected", String(on));
+      });
+      panels.forEach((panel) => {
+        const on = panel.dataset.panel === id;
+        panel.classList.toggle("is-active", on);
+        panel.hidden = !on;
+      });
+    });
+  });
 }
 
 function wire() {
+  wireTabs();
   const inputs = [
     "speed",
     "font",

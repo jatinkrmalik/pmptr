@@ -2,6 +2,7 @@
   color-scheme: dark light;
   --text: #ffffff;
   --hl: #ffd84d;
+  --cue: #f0a35a;
   --bg-rgb: 0, 0, 0;
   --bg-alpha: 0.35;
   --dim: 0;
@@ -24,8 +25,7 @@ body {
   height: 100%;
   background: transparent;
   overflow: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
+  font-family: "Lexend", "Avenir Next", "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -33,12 +33,12 @@ body {
   position: relative;
   width: 100vw;
   height: 100vh;
-  border-radius: 10px;
+  border-radius: 14px;
   overflow: hidden;
   background: rgba(var(--bg-rgb), var(--bg-alpha));
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06),
-    0 14px 40px rgba(0, 0, 0, 0.35);
-  transition: background 120ms ease;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 18px 40px rgba(0, 0, 0, 0.35);
+  transition: background 140ms ease;
 }
 
 .frame.dim {
@@ -65,7 +65,7 @@ body {
 
 .text {
   margin: 0;
-  padding: 0 calc(24px + var(--margin));
+  padding: 0 calc(28px + var(--margin));
   color: var(--text);
   font-size: var(--font);
   line-height: var(--lh);
@@ -80,6 +80,10 @@ body {
   -webkit-text-stroke: var(--stroke) rgba(0, 0, 0, 0.6);
 }
 
+.text p {
+  margin: 0 0 0.85em;
+}
+
 .text b,
 .text strong {
   color: var(--hl);
@@ -88,75 +92,79 @@ body {
 
 .reading-line {
   position: absolute;
-  left: 8%;
-  right: 8%;
+  left: 7%;
+  right: 7%;
   top: 50%;
   height: 0;
-  border-top: 2px solid rgba(255, 216, 77, 0.55);
+  border-top: 2px solid color-mix(in srgb, var(--cue) 70%, transparent);
   pointer-events: none;
   display: var(--show-line, block);
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--cue) 35%, transparent));
 }
+
 .reading-line::before,
 .reading-line::after {
   content: "";
   position: absolute;
-  top: -3px;
-  width: 6px;
-  height: 6px;
+  top: -4px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: rgba(255, 216, 77, 0.85);
+  background: var(--cue);
 }
+
 .reading-line::before {
-  left: -3px;
+  left: -4px;
 }
+
 .reading-line::after {
-  right: -3px;
+  right: -4px;
 }
 
 .fade {
   position: absolute;
   left: 0;
   right: 0;
-  height: 22%;
+  height: 24%;
   pointer-events: none;
   z-index: 2;
 }
+
 .fade.top {
   top: 0;
   background: linear-gradient(
     to bottom,
-    rgba(0, 0, 0, 0.55),
-    rgba(0, 0, 0, 0)
-  );
-}
-.fade.bottom {
-  bottom: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.55),
+    rgba(0, 0, 0, 0.58),
     rgba(0, 0, 0, 0)
   );
 }
 
+.fade.bottom {
+  bottom: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.58), rgba(0, 0, 0, 0));
+}
+
 .hud {
   position: absolute;
-  bottom: 8px;
-  right: 8px;
+  bottom: 10px;
+  right: 10px;
   display: flex;
-  gap: 4px;
-  background: rgba(15, 17, 21, 0.6);
+  gap: 2px;
+  background: rgba(12, 14, 18, 0.72);
   padding: 4px;
-  border-radius: 8px;
-  backdrop-filter: blur(6px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   -webkit-app-region: no-drag;
   z-index: 5;
-  opacity: 0.18;
-  transition: opacity 160ms ease;
+  opacity: 0.2;
+  transition: opacity 180ms ease;
 }
+
 .hud:hover,
 .hud:focus-within {
   opacity: 1;
 }
+
 .hud[data-locked="true"] {
   opacity: 0;
   pointer-events: none;
@@ -166,39 +174,77 @@ body {
   appearance: none;
   border: 0;
   background: transparent;
-  color: #fff;
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.92);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
   cursor: pointer;
-  font: 14px/1 system-ui;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  transition: background 140ms ease, color 140ms ease;
 }
+
 .hud-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.1);
 }
+
+.hud-btn:focus-visible {
+  outline: 2px solid var(--cue);
+  outline-offset: 1px;
+}
+
 .hud-btn[aria-pressed="true"] {
-  background: rgba(255, 216, 77, 0.2);
-  color: var(--hl);
+  background: color-mix(in srgb, var(--cue) 22%, transparent);
+  color: var(--cue);
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+#iconLock .lock-closed {
+  display: none;
+}
+
+#iconLock[data-state="locked"] .lock-open {
+  display: none;
+}
+
+#iconLock[data-state="locked"] .lock-closed {
+  display: block;
 }
 
 .grab {
   position: absolute;
   top: 0;
   left: 0;
-  right: 60px;
-  height: 22px;
+  right: 70px;
+  height: 24px;
   -webkit-app-region: drag;
   cursor: grab;
   z-index: 3;
   background: linear-gradient(
     to bottom,
-    rgba(255, 255, 255, 0.04),
+    rgba(255, 255, 255, 0.05),
     rgba(255, 255, 255, 0)
   );
 }
+
+.grab::after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  width: 36px;
+  height: 3px;
+  margin-left: -18px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+}
+
 .grab:active {
   cursor: grabbing;
 }
@@ -214,20 +260,25 @@ body {
   background: linear-gradient(
     135deg,
     transparent 50%,
-    rgba(255, 255, 255, 0.25) 50%,
-    rgba(255, 255, 255, 0.25) 60%,
+    rgba(255, 255, 255, 0.28) 50%,
+    rgba(255, 255, 255, 0.28) 60%,
     transparent 60%,
     transparent 70%,
-    rgba(255, 255, 255, 0.15) 70%,
-    rgba(255, 255, 255, 0.15) 80%,
+    rgba(255, 255, 255, 0.16) 70%,
+    rgba(255, 255, 255, 0.16) 80%,
     transparent 80%
   );
 }
 
-/* When the whole window is in click-through mode (locked), the HUD is
-   hidden via the [data-locked] rule above, but the resize handle and
-   grab bar should also be non-blocking so users can still see through. */
 .frame[data-locked="true"] .grab,
 .frame[data-locked="true"] .resize {
   pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hud,
+  .hud-btn,
+  .frame {
+    transition: none;
+  }
 }
