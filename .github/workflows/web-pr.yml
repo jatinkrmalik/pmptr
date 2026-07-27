@@ -4,11 +4,13 @@ on:
   pull_request:
     paths:
       - "web/**"
+      - "demo/**"
       - ".github/workflows/web-pr.yml"
   push:
     branches: [main]
     paths:
       - "web/**"
+      - "demo/**"
       - ".github/workflows/web-pr.yml"
 
 jobs:
@@ -16,6 +18,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Include demo video assets
+        run: |
+          mkdir -p web/assets
+          cp demo/pmptr-demo.mp4 web/assets/pmptr-demo.mp4
+          cp demo/pmptr-demo-poster.jpg web/assets/pmptr-demo-poster.jpg
 
       - uses: actions/setup-node@v4
         with:
@@ -33,3 +41,5 @@ jobs:
           curl -fsS http://localhost:8080/script.js > /dev/null
           curl -fsS http://localhost:8080/assets/icon.svg > /dev/null
           curl -fsS http://localhost:8080/assets/og.png > /dev/null
+          curl -fsS http://localhost:8080/assets/pmptr-demo.mp4 -o /dev/null
+          curl -fsS http://localhost:8080/assets/pmptr-demo-poster.jpg -o /dev/null
