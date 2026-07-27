@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Opt-in **voice follow**: the prompter scrolls while you speak and pauses when you stop, using a local Web Audio voice-activity detector (no audio recorded or sent anywhere). Toggle it in the control window's Reading tab, the prompter HUD mic button, or the `V` shortcut; a mic sensitivity slider tunes speech detection.
+
 ## [0.1.1] - 2026-06-21
 
 ### Fixed

@@ -217,6 +217,42 @@ body {
   display: block;
 }
 
+#btnVoice.voice-on {
+  background: color-mix(in srgb, var(--cue) 22%, transparent);
+  color: var(--cue);
+}
+
+#btnVoice.speaking {
+  background: color-mix(in srgb, var(--cue) 38%, transparent);
+  color: #fff;
+}
+
+#btnVoice.speaking .icon {
+  animation: voice-cue 1.05s ease-in-out infinite;
+}
+
+#btnVoice.voice-err {
+  background: rgba(255, 120, 100, 0.22);
+  color: #ffb4a8;
+}
+
+@keyframes voice-cue {
+  0%,
+  100% {
+    opacity: 0.72;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #btnVoice.speaking .icon {
+    animation: none;
+    opacity: 1;
+  }
+}
+
 .grab {
   position: absolute;
   top: 0;

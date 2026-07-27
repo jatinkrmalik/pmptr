@@ -181,6 +181,44 @@
                 />
               </label>
             </div>
+
+            <div class="voice-block" id="voiceBlock" data-state="off">
+              <label class="toggle voice-toggle">
+                <input id="voiceFollow" type="checkbox" />
+                <span class="toggle-ui" aria-hidden="true"></span>
+                <span class="toggle-copy">
+                  <span class="toggle-title">Voice follow</span>
+                  <span class="toggle-hint"
+                    >Scroll while you speak, pause when you stop</span
+                  >
+                </span>
+              </label>
+              <label class="field wide voice-sens">
+                <span class="lbl"
+                  >Mic sensitivity <output id="voiceSensOut">50</output></span
+                >
+                <input
+                  id="voiceSens"
+                  type="range"
+                  min="0"
+                  max="100"
+                  step="1"
+                  value="50"
+                />
+              </label>
+              <div
+                class="voice-status"
+                id="voiceStatus"
+                role="status"
+                aria-live="polite"
+                data-kind="idle"
+              >
+                <span class="voice-status-dot" aria-hidden="true"></span>
+                <span class="voice-status-text" id="voiceStatusText"
+                  >Off · microphone stays unused</span
+                >
+              </div>
+            </div>
           </div>
 
           <div
@@ -358,6 +396,7 @@
             <li><kbd>R</kbd> Reset to top</li>
             <li><kbd>↑</kbd> <kbd>↓</kbd> Speed ± 5</li>
             <li><kbd>L</kbd> Toggle click-through</li>
+            <li><kbd>V</kbd> Toggle voice follow</li>
             <li><kbd>Esc</kbd> Close prompter</li>
           </ul>
           <p class="hint-note">

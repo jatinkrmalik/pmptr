@@ -16,6 +16,8 @@ const DEFAULTS = {
   bold: false,
   uppercase: false,
   showReadingLine: true,
+  voiceFollow: false,
+  voiceSens: 50,
   alwaysOnTop: true,
   clickThrough: false,
   winWidth: 900,
@@ -66,6 +68,12 @@ const els = {
   bold: $("bold"),
   uppercase: $("uppercase"),
   showReadingLine: $("showReadingLine"),
+  voiceFollow: $("voiceFollow"),
+  voiceSens: $("voiceSens"),
+  voiceSensOut: $("voiceSensOut"),
+  voiceStatus: $("voiceStatus"),
+  voiceStatusText: $("voiceStatusText"),
+  voiceBlock: $("voiceBlock"),
   alwaysOnTop: $("alwaysOnTop"),
   clickThrough: $("clickThrough"),
   winWidth: $("winWidth"),
@@ -100,6 +108,8 @@ function snapshot() {
     bold: els.bold.checked,
     uppercase: els.uppercase.checked,
     showReadingLine: els.showReadingLine.checked,
+    voiceFollow: els.voiceFollow.checked,
+    voiceSens: +els.voiceSens.value,
     alwaysOnTop: els.alwaysOnTop.checked,
     clickThrough: els.clickThrough.checked,
     winWidth: +els.winWidth.value,
@@ -117,6 +127,7 @@ function renderOutputs() {
   els.bgOut.value = els.bg.value;
   els.dimOut.value = els.dim.value;
   els.strokeOut.value = (+els.stroke.value).toFixed(1);
+  els.voiceSensOut.value = els.voiceSens.value;
   els.winWidthOut.value = els.winWidth.value;
   els.winHeightOut.value = els.winHeight.value;
   updateMeta();
@@ -145,12 +156,15 @@ function fillForm() {
   els.bold.checked = state.bold;
   els.uppercase.checked = state.uppercase;
   els.showReadingLine.checked = state.showReadingLine;
+  els.voiceFollow.checked = state.voiceFollow;
+  els.voiceSens.value = state.voiceSens;
   els.alwaysOnTop.checked = state.alwaysOnTop;
   els.clickThrough.checked = state.clickThrough;
   els.winWidth.value = state.winWidth;
   els.winHeight.value = state.winHeight;
   els.position.value = state.position;
   renderOutputs();
+  renderVoiceStatus(state.voiceFollow ? "starting" : "off");
 }
 
 function queueSave() {
@@ -206,6 +220,30 @@ async function closePrompter() {
   await api.closePrompter();
 }
 
+const VOICE_STATUS = {
+  off: { text: "Off · microphone stays unused", kind: "idle" },
+  starting: { text: "Requesting microphone…", kind: "idle" },
+  listening: { text: "Listening · scroll paused", kind: "ok" },
+  speaking: { text: "Speaking · scrolling", kind: "live" },
+  error: {
+    text: "Mic unavailable · constant scroll",
+    kind: "warn",
+  },
+};
+
+function renderVoiceStatus(status) {
+  const entry = VOICE_STATUS[status] || VOICE_STATUS.off;
+  els.voiceStatusText.textContent = entry.text;
+  els.voiceStatus.dataset.kind = entry.kind;
+  const enabled = !!els.voiceFollow.checked;
+  els.voiceBlock.dataset.state = enabled
+    ? status === "error"
+      ? "error"
+      : "on"
+    : "off";
+  els.voiceSens.disabled = !enabled;
+}
+
 function setState(text, kind) {
   els.state.textContent = text;
   els.state.dataset.kind = kind || "idle";
@@ -244,6 +282,7 @@ function wire() {
     "bg",
     "dim",
     "stroke",
+    "voiceSens",
     "winWidth",
     "winHeight",
     "position",
@@ -264,6 +303,7 @@ function wire() {
     "bold",
     "uppercase",
     "showReadingLine",
+    "voiceFollow",
     "alwaysOnTop",
     "clickThrough",
   ];
@@ -274,6 +314,9 @@ function wire() {
       pushToPrompter();
       if (k === "clickThrough") applyClickThrough(els.clickThrough.checked);
       if (k === "alwaysOnTop") applyAlwaysOnTop(els.alwaysOnTop.checked);
+      if (k === "voiceFollow") {
+        renderVoiceStatus(els.voiceFollow.checked ? "starting" : "off");
+      }
     });
   }
   els.script.addEventListener("input", () => {
@@ -321,6 +364,20 @@ function wire() {
       state.speed = s.speed;
       els.speedOut.value = s.speed;
       changed = true;
+    }
+    if (
+      typeof s.voiceFollow === "boolean" &&
+      s.voiceFollow !== els.voiceFollow.checked
+    ) {
+      els.voiceFollow.checked = s.voiceFollow;
+      state.voiceFollow = s.voiceFollow;
+      if (typeof s.voice !== "string") {
+        renderVoiceStatus(s.voiceFollow ? "starting" : "off");
+      }
+      changed = true;
+    }
+    if (typeof s.voice === "string") {
+      renderVoiceStatus(s.voice);
     }
     if (changed) {
       queueSave();
