@@ -40,7 +40,12 @@ click-through overlay over whatever you do on your screen.
   on whatever is underneath.
 - 💾 **Settings persistence** - settings are saved to disk in your Electron user-data folder.
 - ⚡ **Live updates** - edits in the control window apply to the prompter instantly.
-- ⌨️ **Keyboard shortcuts** - play/pause, reset, speed control, and click-through toggle.
+- 🎙️ **Voice follow (opt-in)** - the prompter scrolls while you speak and pauses
+  when you stop, so the script follows your natural pace instead of forcing a
+  monotonous rhythm. All audio processing happens locally; nothing is recorded
+  or sent anywhere.
+- ⌨️ **Keyboard shortcuts** - play/pause, reset, speed control, voice follow,
+  and click-through toggle.
 
 ## Quick Start
 
@@ -87,6 +92,7 @@ npm start
 | `R`       | Reset scroll to the top                 |
 | `↑` / `↓` | Speed ± 5 px/s                          |
 | `L`       | Toggle click-through (lock / unlock)    |
+| `V`       | Toggle voice follow                     |
 | `Esc`     | Close the prompter                      |
 
 You can also use the small HUD in the bottom-right of the floating window
@@ -142,6 +148,25 @@ process calls `win.setIgnoreMouseEvents(true, { forward: true })` - clicks
 and wheel events fall straight through to whatever app is behind, while the
 window stays visible and keeps scrolling. The HUD itself is hidden while
 locked, so nothing on the prompter intercepts your pointer.
+
+## How voice follow works
+
+Voice follow is **off by default**; enable it with the checkbox in the
+control window's **Voice** section, the mic button in the prompter HUD, or
+the `V` key. While enabled, the prompter listens to your microphone through
+the Web Audio API and runs a small voice-activity detector (signal level vs.
+an adaptive noise floor). While you speak, the text scrolls at your
+configured speed; when you pause, the scroll eases to a stop after a short
+grace period (so natural gaps between words don't stall it) and resumes as
+soon as you speak again.
+
+- **Mic sensitivity** controls how loud you must be relative to background
+  noise before scrolling starts. Raise it if the prompter misses quiet
+  speech; lower it in noisy rooms.
+- Everything runs locally in the prompter window - no audio is recorded,
+  stored, or sent anywhere.
+- If the microphone is unavailable, the prompter falls back to constant
+  scrolling and the control window shows a mic error.
 
 ## Tweaking transparency
 

@@ -101,6 +101,17 @@
             >
               Stage
             </button>
+            <button
+              class="tab"
+              role="tab"
+              id="tab-voice"
+              aria-controls="panel-voice"
+              aria-selected="false"
+              data-tab="voice"
+              type="button"
+            >
+              Voice
+            </button>
           </div>
 
           <div
@@ -349,6 +360,48 @@
               </label>
             </div>
           </div>
+
+          <div
+            class="tab-panel"
+            role="tabpanel"
+            id="panel-voice"
+            aria-labelledby="tab-voice"
+            data-panel="voice"
+            hidden
+          >
+            <div class="toggles">
+              <label class="toggle">
+                <input id="voiceFollow" type="checkbox" />
+                <span class="toggle-ui" aria-hidden="true"></span>
+                <span class="toggle-copy">
+                  <span class="toggle-title">Voice follow</span>
+                  <span class="toggle-hint"
+                    >Scroll while you speak, pause when you stop</span
+                  >
+                </span>
+              </label>
+            </div>
+            <div class="grid">
+              <label class="field wide">
+                <span class="lbl"
+                  >Mic sensitivity <output id="voiceSensOut">50</output></span
+                >
+                <input
+                  id="voiceSens"
+                  type="range"
+                  min="0"
+                  max="100"
+                  step="1"
+                  value="50"
+                />
+              </label>
+            </div>
+            <p class="hint-note" id="voiceStatus">
+              Opt-in: the prompter scrolls while you speak and pauses when
+              you stop, so it follows your pace. Uses your microphone
+              locally - nothing is recorded or sent anywhere.
+            </p>
+          </div>
         </section>
 
         <details class="hints">
@@ -358,12 +411,15 @@
             <li><kbd>R</kbd> Reset to top</li>
             <li><kbd>↑</kbd> <kbd>↓</kbd> Speed ± 5</li>
             <li><kbd>L</kbd> Toggle click-through</li>
+            <li><kbd>V</kbd> Toggle voice follow</li>
             <li><kbd>Esc</kbd> Close prompter</li>
           </ul>
           <p class="hint-note">
             Drag the floating window from the top edge. Resize from the
             bottom-right corner. With lock on, the reading area stays
-            click-through while the HUD still responds.
+            click-through while the HUD still responds. Voice follow scrolls
+            while you talk and eases to a stop when you pause - raise mic
+            sensitivity if it misses quiet speech, lower it in noisy rooms.
           </p>
         </details>
       </main>

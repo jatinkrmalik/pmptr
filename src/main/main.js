@@ -1,4 +1,11 @@
-const { app, BrowserWindow, ipcMain, screen, shell } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  ipcMain,
+  screen,
+  session,
+  shell,
+} = require("electron");
 const path = require("path");
 const fs = require("fs");
 
@@ -211,6 +218,14 @@ ipcMain.handle("app:quit", () => {
 });
 
 app.whenReady().then(() => {
+  // Only the microphone is ever needed (opt-in voice-follow scrolling).
+  // Deny every other permission request outright.
+  session.defaultSession.setPermissionRequestHandler(
+    (_wc, permission, callback) => {
+      callback(permission === "media");
+    }
+  );
+
   createControlWindow();
 
   app.on("activate", () => {

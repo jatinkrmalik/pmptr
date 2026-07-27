@@ -16,6 +16,8 @@ const DEFAULTS = {
   bold: false,
   uppercase: false,
   showReadingLine: true,
+  voiceFollow: false,
+  voiceSens: 50,
   alwaysOnTop: true,
   clickThrough: false,
   winWidth: 900,
@@ -66,6 +68,10 @@ const els = {
   bold: $("bold"),
   uppercase: $("uppercase"),
   showReadingLine: $("showReadingLine"),
+  voiceFollow: $("voiceFollow"),
+  voiceSens: $("voiceSens"),
+  voiceSensOut: $("voiceSensOut"),
+  voiceStatus: $("voiceStatus"),
   alwaysOnTop: $("alwaysOnTop"),
   clickThrough: $("clickThrough"),
   winWidth: $("winWidth"),
@@ -100,6 +106,8 @@ function snapshot() {
     bold: els.bold.checked,
     uppercase: els.uppercase.checked,
     showReadingLine: els.showReadingLine.checked,
+    voiceFollow: els.voiceFollow.checked,
+    voiceSens: +els.voiceSens.value,
     alwaysOnTop: els.alwaysOnTop.checked,
     clickThrough: els.clickThrough.checked,
     winWidth: +els.winWidth.value,
@@ -117,6 +125,7 @@ function renderOutputs() {
   els.bgOut.value = els.bg.value;
   els.dimOut.value = els.dim.value;
   els.strokeOut.value = (+els.stroke.value).toFixed(1);
+  els.voiceSensOut.value = els.voiceSens.value;
   els.winWidthOut.value = els.winWidth.value;
   els.winHeightOut.value = els.winHeight.value;
   updateMeta();
@@ -145,6 +154,8 @@ function fillForm() {
   els.bold.checked = state.bold;
   els.uppercase.checked = state.uppercase;
   els.showReadingLine.checked = state.showReadingLine;
+  els.voiceFollow.checked = state.voiceFollow;
+  els.voiceSens.value = state.voiceSens;
   els.alwaysOnTop.checked = state.alwaysOnTop;
   els.clickThrough.checked = state.clickThrough;
   els.winWidth.value = state.winWidth;
@@ -206,6 +217,24 @@ async function closePrompter() {
   await api.closePrompter();
 }
 
+const VOICE_STATUS_TEXT = {
+  off:
+    "Opt-in: the prompter scrolls while you speak and pauses when you " +
+    "stop, so it follows your pace. Uses your microphone locally - " +
+    "nothing is recorded or sent anywhere.",
+  starting: "Voice follow: requesting microphone…",
+  listening: "Voice follow: listening - scroll pauses while you are silent.",
+  speaking: "Voice follow: speech detected - scrolling.",
+  error:
+    "Voice follow: microphone unavailable - scrolling at constant speed. " +
+    "Check mic permissions/device, then toggle voice follow again.",
+};
+
+function renderVoiceStatus(status) {
+  els.voiceStatus.textContent =
+    VOICE_STATUS_TEXT[status] || VOICE_STATUS_TEXT.off;
+}
+
 function setState(text, kind) {
   els.state.textContent = text;
   els.state.dataset.kind = kind || "idle";
@@ -244,6 +273,7 @@ function wire() {
     "bg",
     "dim",
     "stroke",
+    "voiceSens",
     "winWidth",
     "winHeight",
     "position",
@@ -264,6 +294,7 @@ function wire() {
     "bold",
     "uppercase",
     "showReadingLine",
+    "voiceFollow",
     "alwaysOnTop",
     "clickThrough",
   ];
@@ -321,6 +352,17 @@ function wire() {
       state.speed = s.speed;
       els.speedOut.value = s.speed;
       changed = true;
+    }
+    if (
+      typeof s.voiceFollow === "boolean" &&
+      s.voiceFollow !== els.voiceFollow.checked
+    ) {
+      els.voiceFollow.checked = s.voiceFollow;
+      state.voiceFollow = s.voiceFollow;
+      changed = true;
+    }
+    if (typeof s.voice === "string") {
+      renderVoiceStatus(s.voice);
     }
     if (changed) {
       queueSave();

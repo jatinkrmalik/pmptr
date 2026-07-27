@@ -10,6 +10,7 @@ const btnPlay = $("btnPlay");
 const btnReset = $("btnReset");
 const btnLock = $("btnLock");
 const btnClose = $("btnClose");
+const btnVoice = $("btnVoice");
 const iconPlay = $("iconPlay");
 const iconLock = $("iconLock");
 
@@ -19,6 +20,171 @@ let locked = false;
 let trackY = 0;
 let lastTs = 0;
 let rafId = null;
+
+// --- Voice-follow (opt-in): scroll only while the user is speaking ---
+// A lightweight voice-activity detector: mic RMS vs. an adaptive noise
+// floor, with attack/release smoothing and a short hangover so natural
+// inter-word gaps do not stop the scroll.
+const VOICE_HANGOVER_MS = 700; // keep scrolling this long after speech stops
+const VOICE_ATTACK = 6; // gain ramp-up rate (per second)
+const VOICE_RELEASE = 2.5; // gain ramp-down rate (per second)
+
+const voice = {
+  running: false,
+  starting: false,
+  error: false,
+  stream: null,
+  ctx: null,
+  analyser: null,
+  buf: null,
+  rafId: null,
+  lastTs: 0,
+  noiseFloor: 0.01,
+  speaking: false,
+  lastSpeechAt: 0,
+  gain: 0, // 0..1 multiplier applied to scroll speed
+  uiState: "",
+};
+
+function voiceEnabled() {
+  return !!(settings && settings.voiceFollow);
+}
+
+// Effective speed multiplier for the scroll loop. If the mic failed we
+// fall back to constant scrolling instead of freezing the prompter.
+function voiceGain() {
+  if (!voiceEnabled() || !voice.running) return 1;
+  return voice.gain;
+}
+
+async function startVoice() {
+  if (voice.running || voice.starting) return;
+  voice.starting = true;
+  voice.error = false;
+  updateVoiceUi();
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        echoCancellation: true,
+        noiseSuppression: true,
+        autoGainControl: true,
+      },
+      video: false,
+    });
+    voice.stream = stream;
+    voice.ctx = new AudioContext();
+    if (voice.ctx.state === "suspended") await voice.ctx.resume();
+    const src = voice.ctx.createMediaStreamSource(stream);
+    voice.analyser = voice.ctx.createAnalyser();
+    voice.analyser.fftSize = 1024;
+    voice.analyser.smoothingTimeConstant = 0.3;
+    src.connect(voice.analyser);
+    voice.buf = new Float32Array(voice.analyser.fftSize);
+    voice.noiseFloor = 0.01;
+    voice.speaking = false;
+    voice.lastSpeechAt = 0;
+    voice.gain = 0;
+    voice.lastTs = 0;
+    voice.running = true;
+    voice.rafId = requestAnimationFrame(voiceLoop);
+  } catch (e) {
+    console.error("voice-follow: microphone unavailable", e);
+    voice.error = true;
+  }
+  voice.starting = false;
+  updateVoiceUi();
+}
+
+function stopVoice() {
+  if (voice.rafId) cancelAnimationFrame(voice.rafId);
+  voice.rafId = null;
+  if (voice.stream) {
+    for (const t of voice.stream.getTracks()) t.stop();
+  }
+  if (voice.ctx) voice.ctx.close().catch(() => {});
+  voice.stream = null;
+  voice.ctx = null;
+  voice.analyser = null;
+  voice.buf = null;
+  voice.running = false;
+  voice.speaking = false;
+  voice.gain = 0;
+  updateVoiceUi();
+}
+
+function voiceLoop(ts) {
+  if (!voice.running) return;
+  if (!voice.lastTs) voice.lastTs = ts;
+  const dt = Math.min(0.1, (ts - voice.lastTs) / 1000);
+  voice.lastTs = ts;
+
+  voice.analyser.getFloatTimeDomainData(voice.buf);
+  let sum = 0;
+  for (let i = 0; i < voice.buf.length; i++) {
+    sum += voice.buf[i] * voice.buf[i];
+  }
+  const rms = Math.sqrt(sum / voice.buf.length);
+
+  // Adaptive noise floor: drops quickly in silence, creeps up slowly so
+  // sustained speech is not absorbed into the floor.
+  if (rms < voice.noiseFloor) {
+    voice.noiseFloor += (rms - voice.noiseFloor) * 0.2;
+  } else {
+    voice.noiseFloor += (rms - voice.noiseFloor) * 0.005;
+  }
+  voice.noiseFloor = Math.max(0.0005, voice.noiseFloor);
+
+  // Sensitivity (0..100, default 50) sets how far above the noise floor
+  // the signal must be to count as speech.
+  const sens = (settings && settings.voiceSens) ?? 50;
+  const mult = 1.5 + ((100 - sens) / 100) * 6; // 1.5x..7.5x floor
+  const minAbs = 0.003 + ((100 - sens) / 100) * 0.02;
+  const threshold = Math.max(minAbs, voice.noiseFloor * mult);
+
+  const now = performance.now();
+  voice.speaking = rms > threshold;
+  if (voice.speaking) voice.lastSpeechAt = now;
+
+  const target =
+    voice.speaking || now - voice.lastSpeechAt < VOICE_HANGOVER_MS ? 1 : 0;
+  const rate = target > voice.gain ? VOICE_ATTACK : VOICE_RELEASE;
+  voice.gain += (target - voice.gain) * Math.min(1, rate * dt);
+  if (Math.abs(target - voice.gain) < 0.01) voice.gain = target;
+
+  updateVoiceUi();
+  voice.rafId = requestAnimationFrame(voiceLoop);
+}
+
+function updateVoiceUi() {
+  const enabled = voiceEnabled();
+  let state = "off";
+  if (enabled && voice.error) state = "error";
+  else if (enabled && voice.running) {
+    state = voice.speaking ? "speaking" : "listening";
+  } else if (enabled) state = "starting";
+
+  btnVoice.setAttribute("aria-pressed", String(enabled));
+  btnVoice.classList.toggle("voice-on", enabled && !voice.error);
+  btnVoice.classList.toggle("speaking", state === "speaking");
+  btnVoice.classList.toggle("voice-err", state === "error");
+
+  if (state !== voice.uiState) {
+    voice.uiState = state;
+    api.sendState({ voice: state, locked, playing });
+  }
+}
+
+function syncVoice() {
+  if (voiceEnabled()) startVoice();
+  else stopVoice();
+}
+
+function toggleVoiceFollow() {
+  if (!settings) return;
+  settings.voiceFollow = !settings.voiceFollow;
+  syncVoice();
+  api.sendState({ voiceFollow: settings.voiceFollow, locked, playing });
+}
 
 function hexToRgb(hex) {
   const h = (hex || "#000000").replace("#", "");
@@ -109,7 +275,7 @@ function loop(ts) {
   if (!lastTs) lastTs = ts;
   const dt = (ts - lastTs) / 1000;
   lastTs = ts;
-  const speed = (settings && settings.speed) || 40;
+  const speed = ((settings && settings.speed) || 40) * voiceGain();
   trackY -= speed * dt;
   render();
   if (-trackY > track.scrollHeight - readArea.clientHeight / 2) {
@@ -147,6 +313,7 @@ function wireHud() {
     resetScroll();
   });
   btnLock.addEventListener("click", () => setLocked(!locked));
+  btnVoice.addEventListener("click", toggleVoiceFollow);
   btnClose.addEventListener("click", () => window.close());
 
   readArea.addEventListener(
@@ -176,6 +343,8 @@ function wireKeys() {
       adjustSpeed(-5);
     } else if (e.key === "l" || e.key === "L") {
       setLocked(!locked);
+    } else if (e.key === "v" || e.key === "V") {
+      toggleVoiceFollow();
     } else if (e.key === "Escape") {
       window.close();
     }
@@ -190,6 +359,7 @@ function boot() {
     if (!s) return;
     settings = s;
     applySettings();
+    syncVoice();
     if (playing) play();
     if (typeof s.clickThrough === "boolean" && s.clickThrough !== locked) {
       setLocked(s.clickThrough);
