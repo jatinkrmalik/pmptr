@@ -2,258 +2,372 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="color-scheme" content="light" />
     <title>pmptr - control</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Lexend:wght@300;400;500;600&family=Syne:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="control.css" />
   </head>
   <body>
-    <header class="topbar">
-      <div class="brand">pmptr</div>
-      <div class="sub">virtual teleprompter</div>
-    </header>
-
-    <main class="layout">
-      <section class="card">
-        <div class="card-head">
-          <h2>Script</h2>
-          <div class="row tight">
-            <button id="loadSample" type="button" class="ghost">
-              Load sample
-            </button>
-            <button id="clearScript" type="button" class="ghost">
-              Clear
-            </button>
+    <div class="app">
+      <header class="topbar">
+        <div class="brand-block">
+          <div class="brand-mark" aria-hidden="true">
+            <span class="cue-dot"></span>
+          </div>
+          <div class="brand-copy">
+            <h1 class="brand">pmptr</h1>
+            <p class="tagline">Cue your words. Keep the stage clear.</p>
           </div>
         </div>
-        <textarea
-          id="script"
-          spellcheck="false"
-          placeholder="Paste your script here. Blank lines become paragraph breaks."
-        ></textarea>
-        <div class="hint" id="scriptMeta">0 words · 0 chars</div>
-      </section>
-
-      <section class="card">
-        <h2>Reading</h2>
-        <div class="grid">
-          <label class="field">
-            <span class="lbl"
-              >Speed <output id="speedOut">40</output>
-              <span class="unit">px/s</span></span
-            >
-            <input id="speed" type="range" min="5" max="300" step="1" value="40" />
-          </label>
-          <label class="field">
-            <span class="lbl"
-              >Text size <output id="fontOut">44</output>
-              <span class="unit">px</span></span
-            >
-            <input id="font" type="range" min="16" max="120" step="1" value="44" />
-          </label>
-          <label class="field">
-            <span class="lbl"
-              >Line height
-              <output id="lhOut">1.45</output></span
-            >
-            <input
-              id="lh"
-              type="range"
-              min="1"
-              max="2.4"
-              step="0.05"
-              value="1.45"
-            />
-          </label>
-          <label class="field">
-            <span class="lbl"
-              >Letter spacing
-              <output id="lsOut">0</output>
-              <span class="unit">px</span></span
-            >
-            <input
-              id="ls"
-              type="range"
-              min="-2"
-              max="10"
-              step="0.5"
-              value="0"
-            />
-          </label>
-          <label class="field">
-            <span class="lbl"
-              >Margin <output id="marginOut">0</output>
-              <span class="unit">px</span></span
-            >
-            <input
-              id="margin"
-              type="range"
-              min="0"
-              max="200"
-              step="2"
-              value="0"
-            />
-          </label>
+        <div class="topbar-actions">
+          <span class="status-pill" id="state" data-kind="idle">ready</span>
+          <button id="openBtn" class="btn primary" type="button">
+            <svg class="btn-icon" viewBox="0 0 20 20" aria-hidden="true">
+              <path
+                fill="currentColor"
+                d="M4 4.75A1.75 1.75 0 0 1 5.75 3h8.5A1.75 1.75 0 0 1 16 4.75v10.5A1.75 1.75 0 0 1 14.25 17h-8.5A1.75 1.75 0 0 1 4 15.25V4.75Zm1.75-.25a.25.25 0 0 0-.25.25v10.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25V4.75a.25.25 0 0 0-.25-.25h-8.5ZM7 7.5h6v1.25H7V7.5Zm0 3h4v1.25H7V10.5Z"
+              />
+            </svg>
+            Open prompter
+          </button>
+          <button id="closeBtn" class="btn" type="button" disabled>
+            Close
+          </button>
         </div>
-      </section>
+      </header>
 
-      <section class="card">
-        <h2>Appearance</h2>
-        <div class="grid">
-          <label class="field">
-            <span class="lbl">Text color</span>
-            <input id="color" type="color" value="#ffffff" />
-          </label>
-          <label class="field">
-            <span class="lbl">Highlight color</span>
-            <input id="hl" type="color" value="#ffd84d" />
-          </label>
-          <label class="field">
-            <span class="lbl"
-              >Background opacity
-              <output id="bgOut">35</output>
-              <span class="unit">%</span></span
-            >
-            <input
-              id="bg"
-              type="range"
-              min="0"
-              max="100"
-              step="1"
-              value="35"
-            />
-          </label>
-          <label class="field">
-            <span class="lbl"
-              >Background dim
-              <output id="dimOut">0</output>
-              <span class="unit">%</span></span
-            >
-            <input
-              id="dim"
-              type="range"
-              min="0"
-              max="100"
-              step="1"
-              value="0"
-            />
-          </label>
-          <label class="field wide">
-            <span class="lbl"
-              >Text outline
-              <output id="strokeOut">0</output>
-              <span class="unit">px</span></span
-            >
-            <input
-              id="stroke"
-              type="range"
-              min="0"
-              max="6"
-              step="0.5"
-              value="0"
-            />
-          </label>
-        </div>
-        <div class="row tight">
-          <label class="check">
-            <input id="mirror" type="checkbox" />
-            <span>Mirror (for beam-splitter glass)</span>
-          </label>
-          <label class="check">
-            <input id="bold" type="checkbox" />
-            <span>Bold</span>
-          </label>
-          <label class="check">
-            <input id="uppercase" type="checkbox" />
-            <span>UPPERCASE</span>
-          </label>
-          <label class="check">
-            <input id="showReadingLine" type="checkbox" checked />
-            <span>Reading line</span>
-          </label>
-        </div>
-      </section>
+      <main class="layout">
+        <section class="panel script-panel" aria-labelledby="scriptHeading">
+          <div class="panel-head">
+            <div>
+              <h2 id="scriptHeading">Script</h2>
+              <p class="panel-sub">Paste what you will read. Blank lines become pauses.</p>
+            </div>
+            <div class="row tight">
+              <button id="loadSample" type="button" class="btn ghost">
+                Load sample
+              </button>
+              <button id="clearScript" type="button" class="btn ghost">
+                Clear
+              </button>
+            </div>
+          </div>
+          <textarea
+            id="script"
+            spellcheck="false"
+            placeholder="Paste your script here…"
+            aria-describedby="scriptMeta"
+          ></textarea>
+          <div class="script-meta" id="scriptMeta">0 words · 0 chars</div>
+        </section>
 
-      <section class="card">
-        <h2>Window</h2>
-        <div class="grid">
-          <label class="field">
-            <span class="lbl"
-              >Width <output id="winWidthOut">900</output>
-              <span class="unit">px</span></span
+        <section class="panel settings-panel" aria-label="Prompter settings">
+          <div class="tabs" role="tablist" aria-label="Settings">
+            <button
+              class="tab is-active"
+              role="tab"
+              id="tab-reading"
+              aria-controls="panel-reading"
+              aria-selected="true"
+              data-tab="reading"
+              type="button"
             >
-            <input
-              id="winWidth"
-              type="range"
-              min="240"
-              max="2400"
-              step="10"
-              value="900"
-            />
-          </label>
-          <label class="field">
-            <span class="lbl"
-              >Height <output id="winHeightOut">280</output>
-              <span class="unit">px</span></span
+              Reading
+            </button>
+            <button
+              class="tab"
+              role="tab"
+              id="tab-look"
+              aria-controls="panel-look"
+              aria-selected="false"
+              data-tab="look"
+              type="button"
             >
-            <input
-              id="winHeight"
-              type="range"
-              min="80"
-              max="900"
-              step="10"
-              value="280"
-            />
-          </label>
-          <label class="field">
-            <span class="lbl">Position preset</span>
-            <select id="position">
-              <option value="top-center" selected>Top center</option>
-              <option value="top-left">Top left</option>
-              <option value="top-right">Top right</option>
-              <option value="bottom-center">Bottom center</option>
-            </select>
-          </label>
-        </div>
-        <div class="row tight">
-          <label class="check">
-            <input id="alwaysOnTop" type="checkbox" checked />
-            <span>Always on top</span>
-          </label>
-          <label class="check">
-            <input id="clickThrough" type="checkbox" />
-            <span>Click-through (lock)</span>
-          </label>
-        </div>
-      </section>
+              Look
+            </button>
+            <button
+              class="tab"
+              role="tab"
+              id="tab-stage"
+              aria-controls="panel-stage"
+              aria-selected="false"
+              data-tab="stage"
+              type="button"
+            >
+              Stage
+            </button>
+          </div>
 
-      <section class="card actions">
-        <button id="openBtn" class="primary" type="button">
-          Open floating prompter
-        </button>
-        <button id="closeBtn" type="button" disabled>Close prompter</button>
-        <span class="state" id="state">prompter closed</span>
-      </section>
+          <div
+            class="tab-panel is-active"
+            role="tabpanel"
+            id="panel-reading"
+            aria-labelledby="tab-reading"
+            data-panel="reading"
+          >
+            <div class="grid">
+              <label class="field">
+                <span class="lbl"
+                  >Speed <output id="speedOut">40</output>
+                  <span class="unit">px/s</span></span
+                >
+                <input
+                  id="speed"
+                  type="range"
+                  min="5"
+                  max="300"
+                  step="1"
+                  value="40"
+                />
+              </label>
+              <label class="field">
+                <span class="lbl"
+                  >Text size <output id="fontOut">44</output>
+                  <span class="unit">px</span></span
+                >
+                <input
+                  id="font"
+                  type="range"
+                  min="16"
+                  max="120"
+                  step="1"
+                  value="44"
+                />
+              </label>
+              <label class="field">
+                <span class="lbl"
+                  >Line height <output id="lhOut">1.45</output></span
+                >
+                <input
+                  id="lh"
+                  type="range"
+                  min="1"
+                  max="2.4"
+                  step="0.05"
+                  value="1.45"
+                />
+              </label>
+              <label class="field">
+                <span class="lbl"
+                  >Letter spacing <output id="lsOut">0</output>
+                  <span class="unit">px</span></span
+                >
+                <input
+                  id="ls"
+                  type="range"
+                  min="-2"
+                  max="10"
+                  step="0.5"
+                  value="0"
+                />
+              </label>
+              <label class="field wide">
+                <span class="lbl"
+                  >Side margin <output id="marginOut">0</output>
+                  <span class="unit">px</span></span
+                >
+                <input
+                  id="margin"
+                  type="range"
+                  min="0"
+                  max="200"
+                  step="2"
+                  value="0"
+                />
+              </label>
+            </div>
+          </div>
 
-      <details class="card hint-card">
-        <summary>Shortcuts &amp; tips</summary>
-        <ul>
-          <li>
-            <b>Space</b> - play / pause. <b>R</b> - reset to top.
-            <b>↑ / ↓</b> - speed ± 5. <b>L</b> - toggle click-through.
-            <b>Esc</b> - close prompter.
-          </li>
-          <li>
-            When the prompter is <b>locked</b> (click-through on), the HUD
-            still works because we forward mouse events to interactive
-            children. The reading area itself is fully click-through.
-          </li>
-          <li>
-            Drag the bottom-right corner of the floating window to resize
-            live. Position preset recenters it.
-          </li>
-        </ul>
-      </details>
-    </main>
+          <div
+            class="tab-panel"
+            role="tabpanel"
+            id="panel-look"
+            aria-labelledby="tab-look"
+            data-panel="look"
+            hidden
+          >
+            <div class="grid">
+              <label class="field">
+                <span class="lbl">Text color</span>
+                <span class="swatch">
+                  <input id="color" type="color" value="#ffffff" />
+                </span>
+              </label>
+              <label class="field">
+                <span class="lbl">Highlight color</span>
+                <span class="swatch">
+                  <input id="hl" type="color" value="#ffd84d" />
+                </span>
+              </label>
+              <label class="field">
+                <span class="lbl"
+                  >Background opacity
+                  <output id="bgOut">35</output>
+                  <span class="unit">%</span></span
+                >
+                <input
+                  id="bg"
+                  type="range"
+                  min="0"
+                  max="100"
+                  step="1"
+                  value="35"
+                />
+              </label>
+              <label class="field">
+                <span class="lbl"
+                  >Background dim
+                  <output id="dimOut">0</output>
+                  <span class="unit">%</span></span
+                >
+                <input
+                  id="dim"
+                  type="range"
+                  min="0"
+                  max="100"
+                  step="1"
+                  value="0"
+                />
+              </label>
+              <label class="field wide">
+                <span class="lbl"
+                  >Text outline
+                  <output id="strokeOut">0</output>
+                  <span class="unit">px</span></span
+                >
+                <input
+                  id="stroke"
+                  type="range"
+                  min="0"
+                  max="6"
+                  step="0.5"
+                  value="0"
+                />
+              </label>
+            </div>
+            <div class="toggles">
+              <label class="toggle">
+                <input id="mirror" type="checkbox" />
+                <span class="toggle-ui" aria-hidden="true"></span>
+                <span class="toggle-copy">
+                  <span class="toggle-title">Mirror</span>
+                  <span class="toggle-hint">For beam-splitter glass</span>
+                </span>
+              </label>
+              <label class="toggle">
+                <input id="bold" type="checkbox" />
+                <span class="toggle-ui" aria-hidden="true"></span>
+                <span class="toggle-copy">
+                  <span class="toggle-title">Bold</span>
+                </span>
+              </label>
+              <label class="toggle">
+                <input id="uppercase" type="checkbox" />
+                <span class="toggle-ui" aria-hidden="true"></span>
+                <span class="toggle-copy">
+                  <span class="toggle-title">Uppercase</span>
+                </span>
+              </label>
+              <label class="toggle">
+                <input id="showReadingLine" type="checkbox" checked />
+                <span class="toggle-ui" aria-hidden="true"></span>
+                <span class="toggle-copy">
+                  <span class="toggle-title">Reading line</span>
+                  <span class="toggle-hint">Fixed cue across the midpoint</span>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <div
+            class="tab-panel"
+            role="tabpanel"
+            id="panel-stage"
+            aria-labelledby="tab-stage"
+            data-panel="stage"
+            hidden
+          >
+            <div class="grid">
+              <label class="field">
+                <span class="lbl"
+                  >Width <output id="winWidthOut">900</output>
+                  <span class="unit">px</span></span
+                >
+                <input
+                  id="winWidth"
+                  type="range"
+                  min="240"
+                  max="2400"
+                  step="10"
+                  value="900"
+                />
+              </label>
+              <label class="field">
+                <span class="lbl"
+                  >Height <output id="winHeightOut">280</output>
+                  <span class="unit">px</span></span
+                >
+                <input
+                  id="winHeight"
+                  type="range"
+                  min="80"
+                  max="900"
+                  step="10"
+                  value="280"
+                />
+              </label>
+              <label class="field wide">
+                <span class="lbl">Position preset</span>
+                <select id="position">
+                  <option value="top-center" selected>Top center</option>
+                  <option value="top-left">Top left</option>
+                  <option value="top-right">Top right</option>
+                  <option value="bottom-center">Bottom center</option>
+                </select>
+              </label>
+            </div>
+            <div class="toggles">
+              <label class="toggle">
+                <input id="alwaysOnTop" type="checkbox" checked />
+                <span class="toggle-ui" aria-hidden="true"></span>
+                <span class="toggle-copy">
+                  <span class="toggle-title">Always on top</span>
+                </span>
+              </label>
+              <label class="toggle">
+                <input id="clickThrough" type="checkbox" />
+                <span class="toggle-ui" aria-hidden="true"></span>
+                <span class="toggle-copy">
+                  <span class="toggle-title">Click-through lock</span>
+                  <span class="toggle-hint">Mouse passes through the overlay</span>
+                </span>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <details class="hints">
+          <summary>Shortcuts</summary>
+          <ul class="shortcut-list">
+            <li><kbd>Space</kbd> Play / pause</li>
+            <li><kbd>R</kbd> Reset to top</li>
+            <li><kbd>↑</kbd> <kbd>↓</kbd> Speed ± 5</li>
+            <li><kbd>L</kbd> Toggle click-through</li>
+            <li><kbd>Esc</kbd> Close prompter</li>
+          </ul>
+          <p class="hint-note">
+            Drag the floating window from the top edge. Resize from the
+            bottom-right corner. With lock on, the reading area stays
+            click-through while the HUD still responds.
+          </p>
+        </details>
+      </main>
+    </div>
 
     <script src="control.js"></script>
   </body>

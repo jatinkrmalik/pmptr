@@ -179,6 +179,14 @@ function applyPosition() {
   api.sendCommand({ type: "position", value: state.position });
 }
 
+function syncOpenCloseButtons() {
+  els.openBtn.disabled = prompterOpen;
+  els.closeBtn.disabled = !prompterOpen;
+  els.openBtn.classList.toggle("primary", !prompterOpen);
+  els.closeBtn.classList.toggle("primary", prompterOpen);
+  els.openBtn.classList.toggle("ghost", prompterOpen);
+}
+
 async function openPrompter() {
   snapshot();
   await api.openPrompter({
@@ -188,8 +196,7 @@ async function openPrompter() {
     alwaysOnTop: state.alwaysOnTop,
   });
   prompterOpen = true;
-  els.openBtn.disabled = true;
-  els.closeBtn.disabled = false;
+  syncOpenCloseButtons();
   setState("prompter open", "ok");
   await pushToPrompter();
   if (state.clickThrough) applyClickThrough(true);
@@ -201,11 +208,31 @@ async function closePrompter() {
 
 function setState(text, kind) {
   els.state.textContent = text;
-  els.state.classList.remove("ok", "warn");
-  if (kind) els.state.classList.add(kind);
+  els.state.dataset.kind = kind || "idle";
+}
+
+function wireTabs() {
+  const tabs = Array.from(document.querySelectorAll(".tab"));
+  const panels = Array.from(document.querySelectorAll(".tab-panel"));
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const id = tab.dataset.tab;
+      tabs.forEach((t) => {
+        const on = t === tab;
+        t.classList.toggle("is-active", on);
+        t.setAttribute("aria-selected", String(on));
+      });
+      panels.forEach((panel) => {
+        const on = panel.dataset.panel === id;
+        panel.classList.toggle("is-active", on);
+        panel.hidden = !on;
+      });
+    });
+  });
 }
 
 function wire() {
+  wireTabs();
   const inputs = [
     "speed",
     "font",
@@ -277,8 +304,7 @@ function wire() {
 
   api.onPrompterClosed(() => {
     prompterOpen = false;
-    els.openBtn.disabled = false;
-    els.closeBtn.disabled = true;
+    syncOpenCloseButtons();
     setState("prompter closed");
   });
 
