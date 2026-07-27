@@ -179,6 +179,14 @@ function applyPosition() {
   api.sendCommand({ type: "position", value: state.position });
 }
 
+function syncOpenCloseButtons() {
+  els.openBtn.disabled = prompterOpen;
+  els.closeBtn.disabled = !prompterOpen;
+  els.openBtn.classList.toggle("primary", !prompterOpen);
+  els.closeBtn.classList.toggle("primary", prompterOpen);
+  els.openBtn.classList.toggle("ghost", prompterOpen);
+}
+
 async function openPrompter() {
   snapshot();
   await api.openPrompter({
@@ -188,8 +196,7 @@ async function openPrompter() {
     alwaysOnTop: state.alwaysOnTop,
   });
   prompterOpen = true;
-  els.openBtn.disabled = true;
-  els.closeBtn.disabled = false;
+  syncOpenCloseButtons();
   setState("prompter open", "ok");
   await pushToPrompter();
   if (state.clickThrough) applyClickThrough(true);
@@ -297,8 +304,7 @@ function wire() {
 
   api.onPrompterClosed(() => {
     prompterOpen = false;
-    els.openBtn.disabled = false;
-    els.closeBtn.disabled = true;
+    syncOpenCloseButtons();
     setState("prompter closed");
   });
 

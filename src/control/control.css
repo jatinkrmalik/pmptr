@@ -445,7 +445,12 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
   border-radius: var(--radius-xs);
   overflow: hidden;
   border: 1px solid var(--line);
-  background: var(--surface-soft);
+  background:
+    linear-gradient(45deg, #cfd5df 25%, transparent 25%) 0 0 / 10px 10px,
+    linear-gradient(-45deg, #cfd5df 25%, transparent 25%) 0 5px / 10px 10px,
+    linear-gradient(45deg, transparent 75%, #cfd5df 75%) 5px -5px / 10px 10px,
+    linear-gradient(-45deg, transparent 75%, #cfd5df 75%) -5px 0 / 10px 10px,
+    #fff;
 }
 
 input[type="color"] {
@@ -455,6 +460,15 @@ input[type="color"] {
   border: 0;
   background: transparent;
   cursor: pointer;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 3px;
+}
+
+input[type="color"]::-webkit-color-swatch {
+  border: 1px solid rgba(18, 21, 28, 0.16);
+  border-radius: 4px;
 }
 
 select {
