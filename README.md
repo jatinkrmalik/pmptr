@@ -33,8 +33,8 @@ click-through overlay over whatever you do on your screen.
 
 ## Features
 
-- 🎛️ **Control window** - paste your script, tune speed, size, colors, opacity, mirror,
-  window dimensions, and more.
+- 🎛️ **Control window** - paste or open a script file, tune speed, size, colors, opacity,
+  mirror, window dimensions, and more. Save edits back to the same file.
 - 🪟 **Floating prompter window** - transparent, frameless, always on top, with
   a true OS-level click-through "lock" so you can keep working with your mouse
   on whatever is underneath.

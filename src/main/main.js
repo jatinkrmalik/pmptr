@@ -1,6 +1,7 @@
 const {
   app,
   BrowserWindow,
+  dialog,
   ipcMain,
   screen,
   session,
@@ -13,6 +14,16 @@ let controlWin = null;
 let prompterWin = null;
 
 const settingsPath = () => path.join(app.getPath("userData"), "settings.json");
+
+const SCRIPT_FILTERS = [
+  { name: "Text", extensions: ["txt", "md", "markdown", "text"] },
+  { name: "All files", extensions: ["*"] },
+];
+
+function dialogParent() {
+  if (controlWin && !controlWin.isDestroyed()) return controlWin;
+  return BrowserWindow.getFocusedWindow();
+}
 
 function loadSettings() {
   try {
@@ -113,6 +124,42 @@ ipcMain.handle("settings:load", () => loadSettings() || {});
 ipcMain.handle("settings:save", (_e, s) => {
   saveSettings(s);
   return true;
+});
+
+ipcMain.handle("script:open", async () => {
+  const { canceled, filePaths } = await dialog.showOpenDialog(dialogParent(), {
+    title: "Open script",
+    properties: ["openFile"],
+    filters: SCRIPT_FILTERS,
+  });
+  if (canceled || !filePaths?.[0]) return { canceled: true };
+  const filePath = filePaths[0];
+  try {
+    const content = fs.readFileSync(filePath, "utf8");
+    return { canceled: false, filePath, content };
+  } catch (e) {
+    return { canceled: false, error: e.message || String(e) };
+  }
+});
+
+ipcMain.handle("script:save", async (_e, payload) => {
+  const { content = "", saveAs = false } = payload || {};
+  let filePath = payload?.filePath || null;
+  if (saveAs || !filePath) {
+    const result = await dialog.showSaveDialog(dialogParent(), {
+      title: "Save script as",
+      defaultPath: filePath || "script.txt",
+      filters: SCRIPT_FILTERS,
+    });
+    if (result.canceled || !result.filePath) return { canceled: true };
+    filePath = result.filePath;
+  }
+  try {
+    fs.writeFileSync(filePath, content, "utf8");
+    return { canceled: false, filePath };
+  } catch (e) {
+    return { canceled: false, error: e.message || String(e) };
+  }
 });
 
 ipcMain.handle("prompter:open", (_e, settings) => {
