@@ -7,9 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-08-16
+
 ### Added
-- Open, Save, and Save as for script files in the control window (native file dialogs)
-- Opt-in **voice follow**: the prompter scrolls while you speak and pauses when you stop, using a local Web Audio voice-activity detector (no audio recorded or sent anywhere). Toggle it in the control window's Reading tab, the prompter HUD mic button, or the `V` shortcut; a mic sensitivity slider tunes speech detection.
+- Open, Save, and Save as for script files in the control window, using the native file dialog. Save writes back to the same path. Fixes #18.
+- Opt-in voice follow. The prompter scrolls while you speak and eases to a stop when you pause. Local Web Audio only; nothing is recorded or sent. Toggle it in the Reading tab, the HUD mic button, or `V`. Mic sensitivity is a slider.
+- Cue Booth control UI: light surface, Reading / Look / Stage tabs, and a cleaner floating HUD.
+- Public site at https://jatinkrmalik.com/pmptr
+- New app icon
+
+### Changed
+- README leads with npm install
+- Version tags now build installers, open the GitHub Release, and publish to npm
+
+### Fixed
+- Hero demo no longer overflows sideways on phones
 
 ## [0.1.1] - 2026-06-21
 
@@ -33,7 +45,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CI/CD pipelines (build, release, nightly, PR artifacts)
 - Multi-platform builds (macOS, Windows, Linux)
 
-[Unreleased]: https://github.com/jatinkrmalik/pmptr/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/jatinkrmalik/pmptr/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/jatinkrmalik/pmptr/releases/tag/v0.2.0
 [0.1.1]: https://github.com/jatinkrmalik/pmptr/releases/tag/v0.1.1
 [0.1.0]: https://github.com/jatinkrmalik/pmptr/releases/tag/v0.1.0
 [0.1.0-beta.1]: https://github.com/jatinkrmalik/pmptr/releases/tag/v0.1.0-beta.1
