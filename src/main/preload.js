@@ -4,6 +4,9 @@ contextBridge.exposeInMainWorld("pmptr", {
   loadSettings: () => ipcRenderer.invoke("settings:load"),
   saveSettings: (s) => ipcRenderer.invoke("settings:save", s),
 
+  openScript: () => ipcRenderer.invoke("script:open"),
+  saveScript: (opts) => ipcRenderer.invoke("script:save", opts),
+
   openPrompter: (s) => ipcRenderer.invoke("prompter:open", s),
   closePrompter: () => ipcRenderer.invoke("prompter:close"),
   isPrompterOpen: () => ipcRenderer.invoke("prompter:isOpen"),

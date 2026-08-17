@@ -44,6 +44,9 @@ const $ = (id) => document.getElementById(id);
 const els = {
   script: $("script"),
   scriptMeta: $("scriptMeta"),
+  openScript: $("openScript"),
+  saveScript: $("saveScript"),
+  saveScriptAs: $("saveScriptAs"),
   loadSample: $("loadSample"),
   clearScript: $("clearScript"),
   speed: $("speed"),
@@ -89,6 +92,17 @@ const els = {
 let state = { ...DEFAULTS };
 let saveTimer = null;
 let prompterOpen = false;
+let currentFilePath = null;
+
+function fileLabel(filePath) {
+  if (!filePath) return "";
+  const parts = String(filePath).split(/[\\/]/);
+  return parts[parts.length - 1] || filePath;
+}
+
+function clearCurrentFile() {
+  currentFilePath = null;
+}
 
 function snapshot() {
   state = {
@@ -137,7 +151,8 @@ function updateMeta() {
   const t = els.script.value || "";
   const words = t.trim() ? t.trim().split(/\s+/).length : 0;
   const minutes = state.speed > 0 ? Math.max(0.1, words / (state.speed * 1.4)) : 0;
-  els.scriptMeta.textContent = `${words} word${words === 1 ? "" : "s"} · ${t.length} chars · ≈ ${minutes.toFixed(1)} min @ current size`;
+  const fileBit = currentFilePath ? ` · ${fileLabel(currentFilePath)}` : "";
+  els.scriptMeta.textContent = `${words} word${words === 1 ? "" : "s"} · ${t.length} chars · ≈ ${minutes.toFixed(1)} min @ current size${fileBit}`;
 }
 
 function fillForm() {
@@ -329,7 +344,44 @@ function wire() {
   els.openBtn.addEventListener("click", openPrompter);
   els.closeBtn.addEventListener("click", closePrompter);
 
+  els.openScript.addEventListener("click", async () => {
+    const res = await api.openScript();
+    if (!res || res.canceled) return;
+    if (res.error) {
+      setState(res.error, "warn");
+      return;
+    }
+    currentFilePath = res.filePath || null;
+    els.script.value = res.content ?? "";
+    snapshot();
+    renderOutputs();
+    queueSave();
+    pushToPrompter();
+    setState(`opened ${fileLabel(currentFilePath)}`, "ok");
+  });
+
+  async function saveToDisk({ saveAs = false } = {}) {
+    snapshot();
+    const res = await api.saveScript({
+      filePath: currentFilePath,
+      content: els.script.value,
+      saveAs,
+    });
+    if (!res || res.canceled) return;
+    if (res.error) {
+      setState(res.error, "warn");
+      return;
+    }
+    currentFilePath = res.filePath || currentFilePath;
+    updateMeta();
+    setState(`saved ${fileLabel(currentFilePath)}`, "ok");
+  }
+
+  els.saveScript.addEventListener("click", () => saveToDisk());
+  els.saveScriptAs.addEventListener("click", () => saveToDisk({ saveAs: true }));
+
   els.loadSample.addEventListener("click", () => {
+    clearCurrentFile();
     els.script.value = SAMPLE;
     snapshot();
     renderOutputs();
@@ -337,6 +389,7 @@ function wire() {
     pushToPrompter();
   });
   els.clearScript.addEventListener("click", () => {
+    clearCurrentFile();
     els.script.value = "";
     snapshot();
     renderOutputs();
